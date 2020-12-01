@@ -56,16 +56,16 @@ public class King extends Piece {
             }
         } else {
             if (i == 0) {
-                if (j == 4 && game.getBoard()[0][7] != null && game.getBoard()[0][7].getName().equals("R") && game.getBoard()[0][5] == null && game.getBoard()[0][6] == null) {
+                if (j == 4 && game.getBoard()[0][7] != null && game.getBoard()[0][7].getName().equals("r") && game.getBoard()[0][5] == null && game.getBoard()[0][6] == null) {
                     getPossibles().add(new Coordinates(0, 6));
                 }
-                if (j == 4 && game.getBoard()[0][0] != null && game.getBoard()[0][0].getName().equals("R") && game.getBoard()[0][1] == null && game.getBoard()[0][2] == null && game.getBoard()[0][3] == null) {
+                if (j == 4 && game.getBoard()[0][0] != null && game.getBoard()[0][0].getName().equals("r") && game.getBoard()[0][1] == null && game.getBoard()[0][2] == null && game.getBoard()[0][3] == null) {
                     getPossibles().add(new Coordinates(0, 2));
                 }
-                if (j == 3 && game.getBoard()[0][7] != null && game.getBoard()[0][7].getName().equals("R") && game.getBoard()[0][4] == null && game.getBoard()[0][5] == null && game.getBoard()[0][6] == null) {
+                if (j == 3 && game.getBoard()[0][7] != null && game.getBoard()[0][7].getName().equals("r") && game.getBoard()[0][4] == null && game.getBoard()[0][5] == null && game.getBoard()[0][6] == null) {
                     getPossibles().add(new Coordinates(0, 5));
                 }
-                if (j == 3 && game.getBoard()[0][0] != null && game.getBoard()[0][0].getName().equals("R") && game.getBoard()[0][1] == null && game.getBoard()[0][2] == null) {
+                if (j == 3 && game.getBoard()[0][0] != null && game.getBoard()[0][0].getName().equals("r") && game.getBoard()[0][1] == null && game.getBoard()[0][2] == null) {
                     getPossibles().add(new Coordinates(0, 1));
                 }
             }

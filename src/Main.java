@@ -67,7 +67,6 @@ public class Main {
         Game game = new Game();
         game.setBoard();
         Computer computer = new Computer(game);
-        Computer1 computer1 = new Computer1(game);
         boolean turn = true;
         Scanner scanner = new Scanner(System.in);
         HashMap<String, Integer> stringMap = setStringMap();
@@ -75,9 +74,8 @@ public class Main {
         HashMap<Integer, Integer> integerMap = setIntegerMap();
         HashMap<Integer, Integer> reverseIntegerMap = setReverseIntegerMap();
         while (game.finished()) {
-            game.printBoard();
             if (turn) {
-                /*game.printBoard();
+                game.printBoard();
                 System.out.println();
                 System.out.println("Select the piece.");
                 int last = stringMap.get(scanner.next());
@@ -98,10 +96,7 @@ public class Main {
                     y = stringMap.get(scanner.next());
                     x = integerMap.get(scanner.nextInt());
                 }
-                System.out.println(piece.getName() + ": played to " + reverseIntegerMap.get(x) + " and " + reverseStringMap.get(y) + " coordinates.");*/
-                Move bestMove = computer1.findMove();
-                System.out.println(bestMove.getFrom().getName() + ": played to " + reverseIntegerMap.get(bestMove.getToCoordinates().getX()) + " and " + reverseStringMap.get(bestMove.getToCoordinates().getY()) + " coordinates.");
-                bestMove.getFrom().play(game, bestMove.getToCoordinates());
+                System.out.println(piece.getName() + ": played to " + reverseIntegerMap.get(x) + " and " + reverseStringMap.get(y) + " coordinates.");
             } else {
                 Move bestMove = computer.findMove();
                 System.out.println(bestMove.getFrom().getName() + ": played to " + reverseIntegerMap.get(bestMove.getToCoordinates().getX()) + " and " + reverseStringMap.get(bestMove.getToCoordinates().getY()) + " coordinates.");

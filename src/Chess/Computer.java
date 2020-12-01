@@ -2,18 +2,25 @@ package Chess;/* Created by oguzkeremyildiz on 24.11.2020 */
 
 import Chess.Pieces.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class Computer {
 
     private Game game;
     private HashMap<String, Integer> pointMap;
     private static int MAX_DEPTH = 5;
+    private HashMap<Integer, Integer> integerMap;
+    private HashMap<String, Integer> stringMap;
 
     public Computer(Game game) {
         this.game = game;
         pointMap = setMap();
+        integerMap = setIntegerMap();
+        stringMap = setStringMap();
     }
 
     private HashSet<Move> constructCandidates(boolean turn) {
@@ -161,8 +168,58 @@ public class Computer {
         game.getBoard()[move.getToCoordinates().getX()][move.getToCoordinates().getY()] = piece;
     }
 
-    public Move findMove() throws CloneNotSupportedException {
-        System.out.println("siyahın puanı: " + findPointsInBoard(game));
+    private static HashMap<Integer, Integer> setIntegerMap() {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.put(8, 0);
+        map.put(7, 1);
+        map.put(6, 2);
+        map.put(5, 3);
+        map.put(4, 4);
+        map.put(3, 5);
+        map.put(2, 6);
+        map.put(1, 7);
+        return map;
+    }
+
+    private static HashMap<String, Integer> setStringMap() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("a", 0);
+        map.put("b", 1);
+        map.put("c", 2);
+        map.put("d", 3);
+        map.put("e", 4);
+        map.put("f", 5);
+        map.put("g", 6);
+        map.put("h", 7);
+        return map;
+    }
+
+    private boolean isOpeningsContainBoardOrder(String[] board) {
+        for (String current : board) {
+            if (game.getBoard()[integerMap.get(Integer.parseInt(current.charAt(2) + ""))][stringMap.get(current.charAt(1) + "")] != null) {
+                if (!game.getBoard()[integerMap.get(Integer.parseInt(current.charAt(2) + ""))][stringMap.get(current.charAt(1) + "")].getName().equals(current.charAt(0) + "")) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Move findMove() throws CloneNotSupportedException, FileNotFoundException {
+        Scanner source = new Scanner(new File("Openings.txt"));
+        String line;
+        String[] board;
+        String[] to;
+        while (source.hasNext()) {
+            line = source.nextLine();
+            board = line.split(" ");
+            to = source.nextLine().split(" ");
+            if (isOpeningsContainBoardOrder(board)) {
+                return new Move(game.getBoard()[integerMap.get(Integer.parseInt(to[0].charAt(1) + ""))][stringMap.get(to[0].charAt(0) + "")], game.getBoard()[integerMap.get(Integer.parseInt(to[1].charAt(1) + ""))][stringMap.get(to[1].charAt(0) + "")], new Coordinates(integerMap.get(Integer.parseInt(to[1].charAt(1) + "")), stringMap.get(to[1].charAt(0) + "")));
+            }
+        }
         return miniMaxDecision(false, MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 }
