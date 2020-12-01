@@ -79,6 +79,10 @@ public class Computer {
             if (current.getValue() > bestValue){
                 best = move1;
                 bestValue = current.getValue();
+            } else if (current.getValue() == bestValue && current.getValue() < -900) {
+                if (Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k")) {
+                    best = move1;
+                }
             }
             move1.getFrom().setCoordinates(oldCoordinates);
             undo(move1);
