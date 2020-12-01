@@ -39,9 +39,14 @@ public abstract class Piece {
         return possibles;
     }
 
-    public abstract void calculateAllPossibleMoves(Game board, int i, int j);
+    public abstract void calculateAllPossibleMoves(Game game, int i, int j);
 
-    public abstract boolean play(Game board, Coordinates to);
+    public abstract void play(Game board, Coordinates to);
+
+    public boolean contains(Coordinates to, Game game, int i, int j) {
+        calculateAllPossibleMoves(game, i, j);
+        return getPossibles().contains(to);
+    }
 
     @Override
     public int hashCode() {

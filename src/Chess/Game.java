@@ -32,27 +32,12 @@ public class Game {
         return bool1 && bool2;
     }
 
-    public void printBoard() {
-        System.out.print(" a b c d e f g h ");
-        for (int i = 0; i < board.length; i++) {
-            System.out.println();
-            System.out.print("|");
-            for (int j = 0; j < board[0].length; j++) {
-                if (getBoard()[i][j] != null) {
-                    System.out.print(getBoard()[i][j].getName());
-                } else {
-                    System.out.print(" ");
-                }
-                System.out.print("|");
-            }
-            System.out.print(" " + (8 - i));
-        }
-        System.out.println();
-        System.out.print(" a b c d e f g h ");
+    public Piece getPiece(int i, int j) {
+        return board[i][j];
     }
 
-    public Piece[][] getBoard() {
-        return board;
+    public void setPiece(int i, int j, Piece piece) {
+        board[i][j] = piece;
     }
 
     public void setBoard() {
@@ -101,7 +86,7 @@ public class Game {
         Game game = (Game) obj;
         for (int i = 0; i < this.board.length; i++) {
             for (int j = 0; j < this.board[0].length; j++) {
-                if (!this.board[i][j].equals(game.getBoard()[i][j])) {
+                if (!this.board[i][j].equals(game.getPiece(i, j))) {
                     return false;
                 }
             }

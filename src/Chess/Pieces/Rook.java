@@ -14,40 +14,40 @@ public class Rook extends Piece {
         getPossibles().clear();
         int iterate = 1;
         while (i + iterate < 8) {
-            if (game.getBoard()[i + iterate][j] == null || !(game.getBoard()[i + iterate][j].isTurn() == isTurn())) {
+            if (game.getPiece(i + iterate, j) == null || !(game.getPiece(i + iterate, j).isTurn() == isTurn())) {
                 getPossibles().add(new Coordinates(i + iterate, j));
             }
-            if (game.getBoard()[i + iterate][j] != null) {
+            if (game.getPiece(i + iterate, j) != null) {
                 break;
             }
             iterate++;
         }
         iterate = 1;
         while (i - iterate > -1) {
-            if (game.getBoard()[i - iterate][j] == null || !(game.getBoard()[i - iterate][j].isTurn() == isTurn())) {
+            if (game.getPiece(i - iterate, j) == null || !(game.getPiece(i - iterate, j).isTurn() == isTurn())) {
                 getPossibles().add(new Coordinates(i - iterate, j));
             }
-            if (game.getBoard()[i - iterate][j] != null) {
+            if (game.getPiece(i - iterate, j) != null) {
                 break;
             }
             iterate++;
         }
         iterate = 1;
         while (j + iterate < 8) {
-            if (game.getBoard()[i][j + iterate] == null || !(game.getBoard()[i][j + iterate].isTurn() == isTurn())) {
+            if (game.getPiece(i, j + iterate) == null || !(game.getPiece(i, j + iterate).isTurn() == isTurn())) {
                 getPossibles().add(new Coordinates(i, j + iterate));
             }
-            if (game.getBoard()[i][j + iterate] != null) {
+            if (game.getPiece(i, j + iterate) != null) {
                 break;
             }
             iterate++;
         }
         iterate = 1;
         while (j - iterate > -1) {
-            if (game.getBoard()[i][j - iterate] == null || !(game.getBoard()[i][j - iterate].isTurn() == isTurn())) {
+            if (game.getPiece(i, j - iterate) == null || !(game.getPiece(i, j - iterate).isTurn() == isTurn())) {
                 getPossibles().add(new Coordinates(i, j - iterate));
             }
-            if (game.getBoard()[i][j - iterate] != null) {
+            if (game.getPiece(i, j - iterate) != null) {
                 break;
             }
             iterate++;
@@ -55,16 +55,15 @@ public class Rook extends Piece {
     }
 
     @Override
-    public boolean play(Game game, Coordinates to) {
+    public void play(Game game, Coordinates to) {
         int i = getCoordinates().getX();
         int j = getCoordinates().getY();
         calculateAllPossibleMoves(game, i, j);
         if (getPossibles().contains(to)) {
-            Piece current = game.getBoard()[i][j];
-            game.getBoard()[i][j] = null;
-            game.getBoard()[to.getX()][to.getY()] = current;
+            Piece current = game.getPiece(i, j);
+            game.setPiece(i, j, null);
+            game.setPiece(to.getX(), to.getY(), current);
             setCoordinates(to);
         }
-        return getPossibles().contains(to);
     }
 }

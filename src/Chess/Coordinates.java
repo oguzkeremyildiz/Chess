@@ -67,7 +67,7 @@ public class Coordinates implements Cloneable {
     }
 
     @Override
-    protected Object clone() {
+    public Object clone() {
         return new Coordinates(x, y);
     }
 }
