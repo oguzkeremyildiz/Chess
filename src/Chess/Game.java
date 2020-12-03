@@ -2,9 +2,12 @@ package Chess;
 
 import Chess.Pieces.*;
 
+import java.util.Map;
+
 public class Game {
 
     private Piece[][] board;
+    public static final Map<Integer, Integer> INTEGER_MAP = Map.of(8, 0, 7, 1, 6,2, 5, 3, 4, 4, 3, 5, 2, 6, 1, 7, 0, 8);
 
     public Game() {
         board = new Piece[8][8];

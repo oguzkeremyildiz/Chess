@@ -20,7 +20,6 @@ public class Computer extends Player {
     public Computer(Game game) {
         super(game);
         pointMap = setMap();
-        integerMap = setIntegerMap();
         stringMap = setStringMap();
     }
 
@@ -175,8 +174,8 @@ public class Computer extends Player {
 
     private boolean isOpeningsContainBoardOrder(String[] board) {
         for (String current : board) {
-            if (game.getPiece(integerMap.get(Integer.parseInt(current.charAt(2) + "")), stringMap.get(current.charAt(1) + "")) != null) {
-                if (!game.getPiece(integerMap.get(Integer.parseInt(current.charAt(2) + "")), stringMap.get(current.charAt(1) + "")).getName().equals(current.charAt(0) + "")) {
+            if (game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(current.charAt(2) + "")), stringMap.get(current.charAt(1) + "")) != null) {
+                if (!game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(current.charAt(2) + "")), stringMap.get(current.charAt(1) + "")).getName().equals(current.charAt(0) + "")) {
                     return false;
                 }
             } else {
@@ -196,7 +195,7 @@ public class Computer extends Player {
             board = line.split(" ");
             to = source.nextLine().split(" ");
             if (isOpeningsContainBoardOrder(board)) {
-                return new Move(game.getPiece(integerMap.get(Integer.parseInt(to[0].charAt(1) + "")), stringMap.get(to[0].charAt(0) + "")), game.getPiece(integerMap.get(Integer.parseInt(to[1].charAt(1) + "")), stringMap.get(to[1].charAt(0) + "")), new Coordinates(integerMap.get(Integer.parseInt(to[1].charAt(1) + "")), stringMap.get(to[1].charAt(0) + "")));
+                return new Move(game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(to[0].charAt(1) + "")), stringMap.get(to[0].charAt(0) + "")), game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(to[1].charAt(1) + "")), stringMap.get(to[1].charAt(0) + "")), new Coordinates(Game.INTEGER_MAP.get(Integer.parseInt(to[1].charAt(1) + "")), stringMap.get(to[1].charAt(0) + "")));
             }
         }
         return miniMaxDecision(false, MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE);

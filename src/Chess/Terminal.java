@@ -1,6 +1,46 @@
 package Chess;/* Created by oguzkeremyildiz on 1.12.2020 */
 
-public class Terminal implements PrintBoard {
+import Chess.Pieces.Piece;
+
+import java.util.HashMap;
+import java.util.Scanner;
+
+public class Terminal extends PrintBoard {
+    private Game game;
+    private HashMap<Integer, String> reverseStringMap;
+    private HashMap<String, Integer> stringMap;
+
+    public Terminal(Game game){
+        this.game = game;
+        stringMap = setStringMap();
+        reverseStringMap = setReverseStringMap();
+    }
+
+    protected static HashMap<String, Integer> setStringMap() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("a", 0);
+        map.put("b", 1);
+        map.put("c", 2);
+        map.put("d", 3);
+        map.put("e", 4);
+        map.put("f", 5);
+        map.put("g", 6);
+        map.put("h", 7);
+        return map;
+    }
+
+    private static HashMap<Integer, String> setReverseStringMap() {
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(0, "a");
+        map.put(1, "b");
+        map.put(2, "c");
+        map.put(3, "d");
+        map.put(4, "e");
+        map.put(5, "f");
+        map.put(6, "g");
+        map.put(7, "h");
+        return map;
+    }
     @Override
     public void print(Game game) {
         System.out.print(" a b c d e f g h ");
@@ -19,5 +59,39 @@ public class Terminal implements PrintBoard {
         }
         System.out.println();
         System.out.print(" a b c d e f g h ");
+    }
+
+    @Override
+    public void humanMove() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println();
+        System.out.println("Select the piece.");
+        int last = stringMap.get(scanner.next());
+        int first = Game.INTEGER_MAP.get(scanner.nextInt());
+        while (first > 7 || first < 0 || last > 7 || last < 0 || game.getPiece(first, last) == null || !game.getPiece(first, last).isTurn()) {
+            System.out.println("Try again.");
+            last = stringMap.get(scanner.next());
+            first = Game.INTEGER_MAP.get(scanner.nextInt());
+        }
+        Piece piece = game.getPiece(first, last);
+        System.out.println(piece.getName() + " was selected.");
+        System.out.println("Enter the first position to move.");
+        int y = stringMap.get(scanner.next());
+        System.out.println("Enter the second position to move.");
+        int x = Game.INTEGER_MAP.get(scanner.nextInt());
+        while (!piece.contains(new Coordinates(x, y), game, first, last)) {
+            System.out.println("Cannot be played to this point!");
+            y = stringMap.get(scanner.next());
+            x = Game.INTEGER_MAP.get(scanner.nextInt());
+        }
+        System.out.println(piece.getName() + ": played to " + reverseStringMap.get(y) + Game.INTEGER_MAP.get(x) + " coordinates.");
+        piece.play(game, new Coordinates(x, y));
+        //return new Move(piece, game.getPiece(x, y), new Coordinates(x, y));
+    }
+
+
+    @Override
+    public void run() {
+
     }
 }
