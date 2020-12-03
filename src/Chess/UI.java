@@ -23,8 +23,9 @@ public class UI extends PrintBoard {
     }
 
     @Override
-    public void humanMove() {
+    public void humanMove() throws InterruptedException {
         while (true) {
+            Thread.sleep(100);
             if (uiFrame != null && !uiFrame.getTurn()){
                 uiFrame.setTurn();
                 break;

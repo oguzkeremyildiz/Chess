@@ -3,7 +3,6 @@ package Chess;/* Created by oguzkeremyildiz on 2.12.2020 */
 import Chess.Pieces.Piece;
 
 import javax.swing.*;
-import javax.swing.plaf.PanelUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;

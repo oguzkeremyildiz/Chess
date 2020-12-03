@@ -9,7 +9,7 @@ public class Main {
         return !turn;
     }
 
-    public static void main(String[]args) throws CloneNotSupportedException, FileNotFoundException {
+    public static void main(String[]args) throws CloneNotSupportedException, FileNotFoundException, InterruptedException {
         Game game = new Game();
         game.setBoard();
         Computer computer = new Computer(game);
