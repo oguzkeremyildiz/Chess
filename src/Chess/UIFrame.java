@@ -8,14 +8,20 @@ import java.awt.event.ActionListener;
 public class UIFrame extends JFrame implements ActionListener {
 
     private BoardPanel screen;
+    private JList<String> list;
+    public static DefaultListModel<String> model;
 
     public UIFrame(Game game, boolean turn) {
         setTitle("Chess");
         screen = new BoardPanel(game, turn);
+        model = new DefaultListModel<>();
+        list = new JList<>(model);
+        JScrollPane pane = new JScrollPane(list);
         add(screen, BorderLayout.CENTER);
         setLocationRelativeTo(null);
         setExtendedState(MAXIMIZED_BOTH);
-        //setDefaultCloseOperation(EXIT_ON_CLOSE);
+        add(pane, BorderLayout.WEST);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
 

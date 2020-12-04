@@ -97,8 +97,10 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
             }
         }
         currentPiece.calculateAllPossibleMoves(game, currentPiece.getCoordinates().getX(), currentPiece.getCoordinates().getY());
+        String oldCoordinates = currentPiece.getCoordinates().toString();
         if (currentPiece.getPossibles().contains(new Coordinates(index2, index1))) {
             currentPiece.play(game, new Coordinates(index2, index1));
+            UIFrame.model.addElement(currentPiece.getName() + ": played from " + oldCoordinates + " to " + currentPiece.getCoordinates());
             turn = false;
         }
         currentPiece = null;
