@@ -27,10 +27,18 @@ public class Game {
             }
         }
         if (!bool1) {
-            System.out.println("black wins.");
+            if (UIFrame.model != null) {
+                UIFrame.model.addElement("black wins.");
+            } else {
+                System.out.println("black wins.");
+            }
         }
         if (!bool2) {
-            System.out.println("white wins.");
+            if (UIFrame.model != null) {
+                UIFrame.model.addElement("white wins.");
+            } else {
+                System.out.println("white wins.");
+            }
         }
         return bool1 && bool2;
     }

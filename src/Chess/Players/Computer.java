@@ -15,12 +15,24 @@ import java.util.Scanner;
 public class Computer extends Player {
 
     private HashMap<String, Integer> pointMap;
+    private HashMap<String[], String[]> openings;
     private static int MAX_DEPTH = 5;
 
-    public Computer(Game game) {
+    public Computer(Game game) throws FileNotFoundException {
         super(game);
+        openings = new HashMap<>();
         pointMap = setMap();
         stringMap = setStringMap();
+        Scanner source = new Scanner(new File("Openings.txt"));
+        String line;
+        String[] board;
+        String[] to;
+        while (source.hasNext()) {
+            line = source.nextLine();
+            board = line.split(" ");
+            to = source.nextLine().split(" ");
+            openings.put(board, to);
+        }
     }
 
     private HashSet<Move> constructCandidates(boolean turn) {
@@ -172,31 +184,32 @@ public class Computer extends Player {
         game.setPiece(move.getToCoordinates().getX(), move.getToCoordinates().getY(), piece);
     }
 
-    private boolean isOpeningsContainBoardOrder(String[] board) {
-        for (String current : board) {
-            if (game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(current.charAt(2) + "")), stringMap.get(current.charAt(1) + "")) != null) {
-                if (!game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(current.charAt(2) + "")), stringMap.get(current.charAt(1) + "")).getName().equals(current.charAt(0) + "")) {
-                    return false;
+    private Pair<Boolean, String[]> isOpeningsContainBoardOrder() {
+        boolean check;
+        for (String[] key : openings.keySet()) {
+            check = true;
+            for (String current : key) {
+                if (game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(current.charAt(2) + "")), stringMap.get(current.charAt(1) + "")) != null) {
+                    if (!game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(current.charAt(2) + "")), stringMap.get(current.charAt(1) + "")).getName().equals(current.charAt(0) + "")) {
+                        check = false;
+                        break;
+                    }
+                } else {
+                    check = false;
+                    break;
                 }
-            } else {
-                return false;
+            }
+            if (check) {
+                return new Pair<>(true, openings.get(key));
             }
         }
-        return true;
+        return new Pair<>(false, null);
     }
 
-    public Move findMove() throws CloneNotSupportedException, FileNotFoundException {
-        Scanner source = new Scanner(new File("Openings.txt"));
-        String line;
-        String[] board;
-        String[] to;
-        while (source.hasNext()) {
-            line = source.nextLine();
-            board = line.split(" ");
-            to = source.nextLine().split(" ");
-            if (isOpeningsContainBoardOrder(board)) {
-                return new Move(game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(to[0].charAt(1) + "")), stringMap.get(to[0].charAt(0) + "")), game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(to[1].charAt(1) + "")), stringMap.get(to[1].charAt(0) + "")), new Coordinates(Game.INTEGER_MAP.get(Integer.parseInt(to[1].charAt(1) + "")), stringMap.get(to[1].charAt(0) + "")));
-            }
+    public Move findMove() throws CloneNotSupportedException {
+        Pair<Boolean, String[]> pair = isOpeningsContainBoardOrder();
+        if (pair.getKey()) {
+            return new Move(game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(pair.getValue()[0].charAt(1) + "")), stringMap.get(pair.getValue()[0].charAt(0) + "")), game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(pair.getValue()[1].charAt(1) + "")), stringMap.get(pair.getValue()[1].charAt(0) + "")), new Coordinates(Game.INTEGER_MAP.get(Integer.parseInt(pair.getValue()[1].charAt(1) + "")), stringMap.get(pair.getValue()[1].charAt(0) + "")));
         }
         return miniMaxDecision(false, MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }

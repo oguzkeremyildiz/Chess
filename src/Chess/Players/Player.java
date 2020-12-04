@@ -1,9 +1,7 @@
 package Chess.Players;/* Created by oguzkeremyildiz on 1.12.2020 */
 
 import Chess.Game;
-import Chess.Move;
 
-import java.io.FileNotFoundException;
 import java.util.HashMap;
 
 public abstract class Player {
