@@ -15,14 +15,12 @@ import java.util.Scanner;
 
 public class Computer extends Player {
 
-    private HashMap<String, Integer> pointMap;
     private HashMap<String[], String[]> openings;
     private static int MAX_DEPTH = 6;
 
     public Computer(Game game) throws FileNotFoundException {
         super(game);
         openings = new HashMap<>();
-        pointMap = setMap();
         stringMap = setStringMap();
         Scanner source = new Scanner(new File("Openings.txt"));
         String line;
@@ -81,35 +79,6 @@ public class Computer extends Player {
         return map;
     }
 
-    private HashMap<String, Integer> setMap() {
-        HashMap<String, Integer> map = new HashMap<>();
-        map.put("P", -1);
-        map.put("B", -3);
-        map.put("N", -3);
-        map.put("R", -5);
-        map.put("Q", -9);
-        map.put("K", -1000);
-        map.put("p", 1);
-        map.put("b", 3);
-        map.put("n", 3);
-        map.put("r", 5);
-        map.put("q", 9);
-        map.put("k", 1000);
-        return map;
-    }
-
-    private int findPointsInBoard(Game game) {
-        int sum = 0;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (game.getPiece(i, j) != null) {
-                    sum += pointMap.get(game.getPiece(i, j).getName());
-                }
-            }
-        }
-        return sum;
-    }
-
     private Move miniMaxDecision(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
         LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
         Move best = null;
@@ -138,9 +107,14 @@ public class Computer extends Player {
         return best;
     }
 
+    private PointsInterface findPointInterface() {
+        return new NormalCalculate();
+    }
+
     private Pair<Move, Integer> minValue(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
         Pair<Move, Integer> best;
-        int point = findPointsInBoard(game);
+        PointsInterface pointsInterface = findPointInterface();
+        int point = pointsInterface.calculatePoints(game);
         if (depth == 0 || point > 900 || point < -900) {
             return new Pair<>(null, point);
         } else {
@@ -168,7 +142,8 @@ public class Computer extends Player {
 
     private Pair<Move, Integer> maxValue(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
         Pair<Move, Integer> best;
-        int point = findPointsInBoard(game);
+        PointsInterface pointsInterface = findPointInterface();
+        int point = pointsInterface.calculatePoints(game);
         if (depth == 0 || point > 900 || point < -900) {
             return new Pair<>(null, point);
         } else {
