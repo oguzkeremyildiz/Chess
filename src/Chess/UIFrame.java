@@ -14,6 +14,14 @@ public class UIFrame extends JFrame implements ActionListener {
     public UIFrame(Game game, boolean turn) {
         setTitle("Chess");
         screen = new BoardPanel(game, turn);
+        JMenuBar menuBar = new JMenuBar();
+        JMenu file = new JMenu("File");
+        menuBar.add(file);
+        JMenuItem save = new JMenuItem("Save");
+        JMenuItem open = new JMenuItem("Open");
+        file.add(open);
+        file.add(save);
+        getContentPane().add(BorderLayout.NORTH, menuBar);
         model = new DefaultListModel<>();
         list = new JList<>(model);
         JScrollPane pane = new JScrollPane(list);

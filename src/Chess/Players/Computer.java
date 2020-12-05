@@ -10,13 +10,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 public class Computer extends Player {
 
     private HashMap<String, Integer> pointMap;
     private HashMap<String[], String[]> openings;
-    private static int MAX_DEPTH = 5;
+    private static int MAX_DEPTH = 6;
 
     public Computer(Game game) throws FileNotFoundException {
         super(game);
@@ -35,20 +36,49 @@ public class Computer extends Player {
         }
     }
 
-    private HashSet<Move> constructCandidates(boolean turn) {
-        HashSet<Move> set = new HashSet<>();
+    private String findType(Piece piece, Coordinates coordinates) {
+        if (game.getPiece(coordinates.getX(), coordinates.getY()) != null) {
+            return "TY";
+        }
+        if (piece.getName().equalsIgnoreCase("p")) {
+            return "IO";
+        }
+        if (piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() < coordinates.getX()) {
+            return "IO";
+        }
+        if (!piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() > coordinates.getX()) {
+            return "IO";
+        }
+        if (coordinates.getX() == piece.getCoordinates().getX()) {
+            return "N";
+        }
+        return "GO";
+    }
+
+    private LinkedHashMap<String, HashSet<Move>> setLinkedHashMap() {
+        LinkedHashMap<String, HashSet<Move>> map = new LinkedHashMap<>();
+        map.put("TY", new HashSet<>());
+        map.put("IO", new HashSet<>());
+        map.put("N", new HashSet<>());
+        map.put("GO", new HashSet<>());
+        return map;
+    }
+
+    private LinkedHashMap<String, HashSet<Move>> constructCandidates(boolean turn) {
+        LinkedHashMap<String, HashSet<Move>> map = setLinkedHashMap();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (game.getPiece(i, j) != null && game.getPiece(i, j).isTurn() == turn) {
                     game.getPiece(i, j).calculateAllPossibleMoves(game, i, j);
                     HashSet<Coordinates> possibles = game.getPiece(i, j).getPossibles();
                     for (Coordinates coordinates : possibles) {
-                        set.add(new Move(game.getPiece(i, j), game.getPiece(coordinates.getX(), coordinates.getY()), coordinates));
+                        String type = findType(game.getPiece(i, j), coordinates);
+                        map.get(type).add(new Move(game.getPiece(i, j), game.getPiece(coordinates.getX(), coordinates.getY()), coordinates));
                     }
                 }
             }
         }
-        return set;
+        return map;
     }
 
     private HashMap<String, Integer> setMap() {
@@ -81,26 +111,28 @@ public class Computer extends Player {
     }
 
     private Move miniMaxDecision(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
-        HashSet<Move> subset = constructCandidates(turn);
+        LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
         Move best = null;
         int bestValue = Integer.MIN_VALUE;
-        for (Move move1 : subset) {
-            Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
-            move(move1);
-            Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
-            if (current.getValue() > bestValue){
-                best = move1;
-                bestValue = current.getValue();
-            } else if (current.getValue() == bestValue && current.getValue() < -900) {
-                if (Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k")) {
+        for (String key : subset.keySet()) {
+            for (Move move1 : subset.get(key)) {
+                Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
+                move(move1);
+                Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
+                if (current.getValue() > bestValue){
                     best = move1;
+                    bestValue = current.getValue();
+                } else if (current.getValue() == bestValue && current.getValue() < -900) {
+                    if (Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k")) {
+                        best = move1;
+                    }
                 }
-            }
-            move1.getFrom().setCoordinates(oldCoordinates);
-            undo(move1);
-            alpha = Math.max(alpha, current.getValue());
-            if (alpha >= beta) {
-                break;
+                move1.getFrom().setCoordinates(oldCoordinates);
+                undo(move1);
+                alpha = Math.max(alpha, current.getValue());
+                if (alpha >= beta) {
+                    break;
+                }
             }
         }
         return best;
@@ -113,19 +145,21 @@ public class Computer extends Player {
             return new Pair<>(null, point);
         } else {
             best = new Pair<>(null, Integer.MAX_VALUE);
-            HashSet<Move> subset = constructCandidates(turn);
-            for (Move move1 : subset) {
-                Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
-                move(move1);
-                Pair<Move, Integer> current = maxValue(!turn, depth - 1, alpha, beta);
-                if (current.getValue() < best.getValue()){
-                    best = current;
-                }
-                move1.getFrom().setCoordinates(oldCoordinates);
-                undo(move1);
-                beta = Math.min(beta, current.getValue());
-                if (alpha >= beta) {
-                    break;
+            LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
+            for (String key : subset.keySet()) {
+                for (Move move1 : subset.get(key)) {
+                    Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
+                    move(move1);
+                    Pair<Move, Integer> current = maxValue(!turn, depth - 1, alpha, beta);
+                    if (current.getValue() < best.getValue()){
+                        best = current;
+                    }
+                    move1.getFrom().setCoordinates(oldCoordinates);
+                    undo(move1);
+                    beta = Math.min(beta, current.getValue());
+                    if (alpha >= beta) {
+                        break;
+                    }
                 }
             }
         }
@@ -139,19 +173,21 @@ public class Computer extends Player {
             return new Pair<>(null, point);
         } else {
             best = new Pair<>(null, Integer.MIN_VALUE);
-            HashSet<Move> subset = constructCandidates(turn);
-            for (Move move1 : subset) {
-                Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
-                move(move1);
-                Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
-                if (current.getValue() > best.getValue()){
-                    best = current;
-                }
-                move1.getFrom().setCoordinates(oldCoordinates);
-                undo(move1);
-                alpha = Math.max(alpha, current.getValue());
-                if (alpha >= beta) {
-                    break;
+            LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
+            for (String key : subset.keySet()) {
+                for (Move move1 : subset.get(key)) {
+                    Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
+                    move(move1);
+                    Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
+                    if (current.getValue() > best.getValue()){
+                        best = current;
+                    }
+                    move1.getFrom().setCoordinates(oldCoordinates);
+                    undo(move1);
+                    alpha = Math.max(alpha, current.getValue());
+                    if (alpha >= beta) {
+                        break;
+                    }
                 }
             }
         }
