@@ -89,9 +89,11 @@ public class Computer extends Player {
                 move(move1);
                 Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
                 if (current.getValue() > bestValue){
-                    best = move1;
-                    bestValue = current.getValue();
-                } else if (current.getValue() == bestValue && current.getValue() < -900) {
+                    if (!(current.getValue() < -900 && Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k"))) {
+                        best = move1;
+                        bestValue = current.getValue();
+                    }
+                } else if (current.getValue() == bestValue && current.getValue() == 0) {
                     if (Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k")) {
                         best = move1;
                     }
