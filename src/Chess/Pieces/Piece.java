@@ -57,13 +57,22 @@ public abstract class Piece {
     public String toString() {
         switch (name) {
             case "P":
+            case "p":
                 return "Pawn";
             case "N":
+            case "n":
                 return "Knight";
             case "R":
+            case "r":
                 return "Rook";
-            default:
+            case "Q":
+            case "q":
                 return "Queen";
+            case "K":
+            case "k":
+                return "King";
+            default:
+                return null;
         }
     }
 

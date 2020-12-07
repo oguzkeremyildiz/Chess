@@ -41,10 +41,10 @@ public class Computer extends Player {
         if (piece.getName().equalsIgnoreCase("p")) {
             return "IO";
         }
-        if (piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() < coordinates.getX()) {
+        if (piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() < coordinates.getX() && !piece.getName().equals("k")) {
             return "IO";
         }
-        if (!piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() > coordinates.getX()) {
+        if (!piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() > coordinates.getX() && !piece.getName().equals("K")) {
             return "IO";
         }
         if (coordinates.getX() == piece.getCoordinates().getX()) {
@@ -129,37 +129,66 @@ public class Computer extends Player {
         return false;
     }
 
+    private boolean isCheckMate(Piece piece, LinkedHashMap<String, HashSet<Move>> subsets) {
+        if (piece.getName().equals("k")) {
+            for (String key : subsets.keySet()) {
+                for (Move move : subsets.get(key)) {
+                    if (move.getToCoordinates().equals(piece.getCoordinates())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private Piece findKing() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (game.getPiece(i, j) != null && game.getPiece(i, j).getName().equals("k")) {
+                    return new King((Coordinates) game.getPiece(i, j).getCoordinates().clone(), false, "k");
+                }
+            }
+        }
+        return null;
+    }
+
     private Move miniMaxDecision(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
-        LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
+        LinkedHashMap<String, HashSet<Move>> subsets = constructCandidates(turn);
+        Move necessaryPlay = null;
         Move best = null;
         int bestValue = Integer.MIN_VALUE;
-        for (String key : subset.keySet()) {
-            for (Move move1 : subset.get(key)) {
-                int size = checkSize(move1);
+        for (String key : subsets.keySet()) {
+            for (Move subset : subsets.get(key)) {
+                int size = checkSize(subset);
                 for (int i = 0; i < size; i++) {
-                    Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
-                    boolean bool = setMove(size, i, move1, false);
-                    move(move1);
+                    Coordinates oldCoordinates = (Coordinates) subset.getFrom().getCoordinates().clone();
+                    boolean bool = setMove(size, i, subset, false);
+                    move(subset);
                     Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
-                    if (current.getValue() > bestValue){
-                        if (!(current.getValue() < -900 && Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k"))) {
-                            best = move1;
+                    Piece afterMoveKing = findKing();
+                    assert afterMoveKing != null;
+                    if (current.getValue() > bestValue) {
+                        LinkedHashMap<String, HashSet<Move>> subsetsForKing = constructCandidates(!turn);
+                        if (!isCheckMate(afterMoveKing, subsetsForKing)) {
+                            best = subset;
                             bestValue = current.getValue();
-                        }
-                    } else if (current.getValue() == bestValue && current.getValue() == 0) {
-                        if (Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k")) {
-                            best = move1;
+                        } else {
+                            necessaryPlay = subset;
                         }
                     }
-                    move1.getFrom().setCoordinates(oldCoordinates);
-                    setMove(size, i, move1, bool);
-                    undo(move1);
+                    subset.getFrom().setCoordinates(oldCoordinates);
+                    setMove(size, i, subset, bool);
+                    undo(subset);
                     alpha = Math.max(alpha, current.getValue());
                     if (alpha >= beta) {
                         return best;
                     }
                 }
             }
+        }
+        if (best == null) {
+            return necessaryPlay;
         }
         return best;
     }
