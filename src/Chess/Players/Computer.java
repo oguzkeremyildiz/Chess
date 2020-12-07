@@ -79,30 +79,85 @@ public class Computer extends Player {
         return map;
     }
 
+    private int checkSize(Move move) {
+        if (move.getFrom().getName().equals("P") && move.getToCoordinates().getX() == 0) {
+            return 4;
+        }
+        return 1;
+    }
+
+    private boolean setMove(int size, int index, Move move, boolean isQueen) {
+        if (size == 4) {
+            switch (index) {
+                case 0:
+                    if (move.getFrom().getName().equals("P")) {
+                        move.setFrom(new Bishop(move.getFrom().getCoordinates(), true, "B"));
+                    } else {
+                        move.setFrom(new Pawn(move.getFrom().getCoordinates(), true, "P"));
+                    }
+                    break;
+                case 1:
+                    if (move.getFrom().getName().equals("P")) {
+                        move.setFrom(new Queen(move.getFrom().getCoordinates(), true, "Q"));
+                    } else {
+                        move.setFrom(new Pawn(move.getFrom().getCoordinates(), true, "P"));
+                    }
+                    break;
+                case 2:
+                    if (move.getFrom().getName().equals("P")) {
+                        move.setFrom(new Rook(move.getFrom().getCoordinates(), true, "R"));
+                    } else {
+                        move.setFrom(new Pawn(move.getFrom().getCoordinates(), true, "P"));
+                    }
+                    break;
+                case 3:
+                    if (move.getFrom().getName().equals("P")) {
+                        move.setFrom(new Knight(move.getFrom().getCoordinates(), true, "N"));
+                    } else {
+                        move.setFrom(new Pawn(move.getFrom().getCoordinates(), true, "P"));
+                    }
+                    break;
+            }
+        } else if (size == 1) {
+            if (move.getFrom().getName().equals("p") && move.getToCoordinates().getX() == 7) {
+                move.setFrom(new Queen(move.getFrom().getCoordinates(), false, "q"));
+                return true;
+            } else if (isQueen) {
+                move.setFrom(new Pawn(move.getFrom().getCoordinates(), false, "p"));
+            }
+        }
+        return false;
+    }
+
     private Move miniMaxDecision(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
         LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
         Move best = null;
         int bestValue = Integer.MIN_VALUE;
         for (String key : subset.keySet()) {
             for (Move move1 : subset.get(key)) {
-                Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
-                move(move1);
-                Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
-                if (current.getValue() > bestValue){
-                    if (!(current.getValue() < -900 && Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k"))) {
-                        best = move1;
-                        bestValue = current.getValue();
+                int size = checkSize(move1);
+                for (int i = 0; i < size; i++) {
+                    Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
+                    boolean bool = setMove(size, i, move1, false);
+                    move(move1);
+                    Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
+                    if (current.getValue() > bestValue){
+                        if (!(current.getValue() < -900 && Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k"))) {
+                            best = move1;
+                            bestValue = current.getValue();
+                        }
+                    } else if (current.getValue() == bestValue && current.getValue() == 0) {
+                        if (Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k")) {
+                            best = move1;
+                        }
                     }
-                } else if (current.getValue() == bestValue && current.getValue() == 0) {
-                    if (Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k")) {
-                        best = move1;
+                    move1.getFrom().setCoordinates(oldCoordinates);
+                    setMove(size, i, move1, bool);
+                    undo(move1);
+                    alpha = Math.max(alpha, current.getValue());
+                    if (alpha >= beta) {
+                        return best;
                     }
-                }
-                move1.getFrom().setCoordinates(oldCoordinates);
-                undo(move1);
-                alpha = Math.max(alpha, current.getValue());
-                if (alpha >= beta) {
-                    break;
                 }
             }
         }
@@ -124,17 +179,22 @@ public class Computer extends Player {
             LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
             for (String key : subset.keySet()) {
                 for (Move move1 : subset.get(key)) {
-                    Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
-                    move(move1);
-                    Pair<Move, Integer> current = maxValue(!turn, depth - 1, alpha, beta);
-                    if (current.getValue() < best.getValue()){
-                        best = current;
-                    }
-                    move1.getFrom().setCoordinates(oldCoordinates);
-                    undo(move1);
-                    beta = Math.min(beta, current.getValue());
-                    if (alpha >= beta) {
-                        break;
+                    int size = checkSize(move1);
+                    for (int i = 0; i < size; i++) {
+                        Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
+                        boolean bool = setMove(size, i, move1, false);
+                        move(move1);
+                        Pair<Move, Integer> current = maxValue(!turn, depth - 1, alpha, beta);
+                        if (current.getValue() < best.getValue()){
+                            best = current;
+                        }
+                        move1.getFrom().setCoordinates(oldCoordinates);
+                        setMove(size, i, move1, bool);
+                        undo(move1);
+                        beta = Math.min(beta, current.getValue());
+                        if (alpha >= beta) {
+                            return best;
+                        }
                     }
                 }
             }
@@ -153,17 +213,22 @@ public class Computer extends Player {
             LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
             for (String key : subset.keySet()) {
                 for (Move move1 : subset.get(key)) {
-                    Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
-                    move(move1);
-                    Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
-                    if (current.getValue() > best.getValue()){
-                        best = current;
-                    }
-                    move1.getFrom().setCoordinates(oldCoordinates);
-                    undo(move1);
-                    alpha = Math.max(alpha, current.getValue());
-                    if (alpha >= beta) {
-                        break;
+                    int size = checkSize(move1);
+                    for (int i = 0; i < size; i++) {
+                        Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
+                        boolean bool = setMove(size, i, move1, false);
+                        move(move1);
+                        Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
+                        if (current.getValue() > best.getValue()){
+                            best = current;
+                        }
+                        move1.getFrom().setCoordinates(oldCoordinates);
+                        setMove(size, i, move1, bool);
+                        undo(move1);
+                        alpha = Math.max(alpha, current.getValue());
+                        if (alpha >= beta) {
+                            return best;
+                        }
                     }
                 }
             }
@@ -177,12 +242,12 @@ public class Computer extends Player {
         int to1 = move.getFrom().getCoordinates().getX();
         int to2 = move.getFrom().getCoordinates().getY();
         if (move.getTo() != null) {
-            Piece piece = game.getPiece(from1, from2);
+            Piece piece = move.getFrom();
             game.setPiece(from1, from2, null);
             game.setPiece(to1, to2, piece);
             game.setPiece(from1, from2, move.getTo());
         } else {
-            Piece piece = game.getPiece(from1, from2);
+            Piece piece = move.getFrom();
             game.setPiece(from1, from2, null);
             game.setPiece(to1, to2, piece);
         }
@@ -191,7 +256,7 @@ public class Computer extends Player {
     private void move(Move move) {
         int currentI = move.getFrom().getCoordinates().getX();
         int currentJ = move.getFrom().getCoordinates().getY();
-        Piece piece = game.getPiece(currentI, currentJ);
+        Piece piece = move.getFrom();
         piece.setCoordinates(new Coordinates(move.getToCoordinates().getX(), move.getToCoordinates().getY()));
         game.setPiece(currentI, currentJ, null);
         game.setPiece(move.getToCoordinates().getX(), move.getToCoordinates().getY(), piece);

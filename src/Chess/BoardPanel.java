@@ -82,6 +82,9 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         if (!dragged){
             return;
         }
+        if (currentPiece == null) {
+            return;
+        }
         int index1 = 0;
         int index2 = 0;
         for (int j = 0; j < 8; j++) {
@@ -137,7 +140,9 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                 if (game.getPiece(index2, index1) != null && game.getPiece(index2, index1).getName().toUpperCase().equals(game.getPiece(index2, index1).getName())) {
                     currentPiece = game.getPiece(index2, index1);
                 }
-                dragged = true;
+                if (currentPiece != null) {
+                    dragged = true;
+                }
             } else {
                 mouseIndex1 = e.getX();
                 mouseIndex2 = e.getY();

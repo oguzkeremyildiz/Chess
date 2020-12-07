@@ -22,6 +22,10 @@ public class Move implements Cloneable {
         return from;
     }
 
+    public void setFrom(Piece piece) {
+        this.from = piece;
+    }
+
     public String toString(){
         if (to == null){
             return from.getName() + from.getCoordinates().toString() + "-" + toCoordinates.toString();
