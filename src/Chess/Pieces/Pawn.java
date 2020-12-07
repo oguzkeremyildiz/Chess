@@ -80,7 +80,7 @@ public class Pawn extends Piece {
                     }
                 }
             } else {
-                if (current.getCoordinates().getX() == 7) {
+                if (to.getX() == 7) {
                     game.setPiece(to.getX(), to.getY(), new Queen(to, false, "q"));
                 }
             }
