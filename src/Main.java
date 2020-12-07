@@ -28,7 +28,11 @@ public class Main {
                 }
                 bestMove.getFrom().play(game, bestMove.getToCoordinates());
                 if (UIFrame.model != null) {
-                    UIFrame.model.addElement(bestMove.getFrom().getName() + ": played from " + oldCoordinates + " to " + bestMove.getFrom().getCoordinates());
+                    if (bestMove.getTo() == null) {
+                        UIFrame.model.addElement(bestMove.getFrom().getName() + ": played from " + oldCoordinates + " to " + bestMove.getFrom().getCoordinates());
+                    } else {
+                        UIFrame.model.addElement(bestMove.getFrom().getName() + ": played from " + oldCoordinates + " to " + bestMove.getFrom().getCoordinates() + " (" + bestMove.getTo() + " out of the board)");
+                    }
                     printBoard.print(game);
                 }
             }

@@ -54,6 +54,20 @@ public abstract class Piece {
     }
 
     @Override
+    public String toString() {
+        switch (name) {
+            case "P":
+                return "Pawn";
+            case "N":
+                return "Knight";
+            case "R":
+                return "Rook";
+            default:
+                return "Queen";
+        }
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Piece)) {
             return false;
