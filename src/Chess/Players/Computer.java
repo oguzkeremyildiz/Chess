@@ -35,17 +35,17 @@ public class Computer extends Player {
     }
 
     private String findType(Piece piece, Coordinates coordinates) {
-        if (game.getPiece(coordinates.getX(), coordinates.getY()) != null) {
-            return "TY";
-        }
         if (piece.getName().equalsIgnoreCase("p")) {
             return "IO";
         }
-        if (piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() < coordinates.getX()) {
+        if (piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() < coordinates.getX() && !piece.getName().equals("k")) {
             return "IO";
         }
-        if (!piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() > coordinates.getX()) {
+        if (!piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() > coordinates.getX() && !piece.getName().equals("K")) {
             return "IO";
+        }
+        if (game.getPiece(coordinates.getX(), coordinates.getY()) != null) {
+            return "TY";
         }
         if (coordinates.getX() == piece.getCoordinates().getX()) {
             return "N";
@@ -55,8 +55,8 @@ public class Computer extends Player {
 
     private LinkedHashMap<String, HashSet<Move>> setLinkedHashMap() {
         LinkedHashMap<String, HashSet<Move>> map = new LinkedHashMap<>();
-        map.put("TY", new HashSet<>());
         map.put("IO", new HashSet<>());
+        map.put("TY", new HashSet<>());
         map.put("N", new HashSet<>());
         map.put("GO", new HashSet<>());
         return map;
@@ -129,6 +129,10 @@ public class Computer extends Player {
         return false;
     }
 
+    private PointsInterface findPointInterface() {
+        return new NormalCalculate();
+    }
+
     private Move miniMaxDecision(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
         LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
         Move best = null;
@@ -162,10 +166,6 @@ public class Computer extends Player {
             }
         }
         return best;
-    }
-
-    private PointsInterface findPointInterface() {
-        return new NormalCalculate();
     }
 
     private Pair<Move, Integer> minValue(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
