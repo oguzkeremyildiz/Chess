@@ -5,6 +5,8 @@ import Chess.Game;
 import Chess.Move;
 import Chess.Pair;
 import Chess.Pieces.*;
+import Chess.Players.Interface.NormalCalculate;
+import Chess.Players.Interface.PointsInterface;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,7 +18,7 @@ import java.util.Scanner;
 public class Computer extends Player {
 
     private HashMap<String[], String[]> openings;
-    private static int MAX_DEPTH = 7;
+    private static int MAX_DEPTH = 6;
 
     public Computer(Game game) throws FileNotFoundException {
         super(game);
@@ -129,6 +131,190 @@ public class Computer extends Player {
         return false;
     }
 
+    private boolean isCheckMate() {
+        Piece king = null;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (game.getPiece(i, j) != null && game.getPiece(i, j).getName().equals("k")) {
+                    king = game.getPiece(i, j);
+                    break;
+                }
+            }
+            if (king != null) {
+                break;
+            }
+        }
+        assert king != null;
+        int i = 1;
+        while (i + king.getCoordinates().getX() < 8) {
+            Piece current = game.getPiece(i + king.getCoordinates().getX(), king.getCoordinates().getY());
+            if (current != null) {
+                if (current.getName().equals("R") || current.getName().equals("Q")) {
+                    return true;
+                }
+                if (current.getName().equals(current.getName().toLowerCase())) {
+                    break;
+                }
+            }
+            i++;
+        }
+        i = 1;
+        while (king.getCoordinates().getX() - i > -1) {
+            Piece current = game.getPiece(king.getCoordinates().getX() - i, king.getCoordinates().getY());
+            if (current != null) {
+                if (current.getName().equals("R") || current.getName().equals("Q")) {
+                    return true;
+                }
+                if (current.getName().equals(current.getName().toLowerCase())) {
+                    break;
+                }
+            }
+            i++;
+        }
+        i = 1;
+        while (i + king.getCoordinates().getY() < 8) {
+            Piece current = game.getPiece(king.getCoordinates().getX(), i + king.getCoordinates().getY());
+            if (current != null) {
+                if (current.getName().equals("R") || current.getName().equals("Q")) {
+                    return true;
+                }
+                if (current.getName().equals(current.getName().toLowerCase())) {
+                    break;
+                }
+            }
+            i++;
+        }
+        i = 1;
+        while (king.getCoordinates().getY() - i > -1) {
+            Piece current = game.getPiece(king.getCoordinates().getX(), king.getCoordinates().getY() - i);
+            if (current != null) {
+                if (current.getName().equals("R") || current.getName().equals("Q")) {
+                    return true;
+                }
+                if (current.getName().equals(current.getName().toLowerCase())) {
+                    break;
+                }
+            }
+            i++;
+        }
+        i = 1;
+        while (king.getCoordinates().getX() + i < 8 && king.getCoordinates().getY() + i < 8) {
+            Piece current = game.getPiece(king.getCoordinates().getX() + i, king.getCoordinates().getY() + i);
+            if (current != null) {
+                if (current.getName().equals("B") || current.getName().equals("Q")) {
+                    return true;
+                }
+                if (current.getName().equals(current.getName().toLowerCase())) {
+                    break;
+                }
+            }
+            i++;
+        }
+        i = 1;
+        while (king.getCoordinates().getX() + i < 8 && king.getCoordinates().getY() - i > -1) {
+            Piece current = game.getPiece(king.getCoordinates().getX() + i, king.getCoordinates().getY() - i);
+            if (current != null) {
+                if (current.getName().equals("B") || current.getName().equals("Q")) {
+                    return true;
+                }
+                if (current.getName().equals(current.getName().toLowerCase())) {
+                    break;
+                }
+            }
+            i++;
+        }
+        i = 1;
+        while (king.getCoordinates().getX() - i > -1 && king.getCoordinates().getY() + i < 8) {
+            Piece current = game.getPiece(king.getCoordinates().getX() - i, king.getCoordinates().getY() + i);
+            if (current != null) {
+                if (current.getName().equals("B") || current.getName().equals("Q")) {
+                    return true;
+                }
+                if (current.getName().equals(current.getName().toLowerCase())) {
+                    break;
+                }
+            }
+            i++;
+        }
+        while (king.getCoordinates().getX() - i > -1 && king.getCoordinates().getY() - i > -1) {
+            Piece current = game.getPiece(king.getCoordinates().getX() - i, king.getCoordinates().getY() - i);
+            if (current != null) {
+                if (current.getName().equals("B") || current.getName().equals("Q")) {
+                    return true;
+                }
+                if (current.getName().equals(current.getName().toLowerCase())) {
+                    break;
+                }
+            }
+            i++;
+        }
+        i = king.getCoordinates().getX();
+        int j = king.getCoordinates().getY();
+        if (i - 2 > -1) {
+            if (j - 1 > -1) {
+                if (game.getPiece(i - 2, j - 1) != null) {
+                    if (game.getPiece(i - 2, j - 1).getName().equals("N")) {
+                        return true;
+                    }
+                }
+            }
+            if (j + 1 < 8) {
+                if (game.getPiece(i - 2, j + 1) != null) {
+                    if (game.getPiece(i - 2, j + 1).getName().equals("N")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (i + 2 < 8) {
+            if (j - 1 > -1) {
+                if (game.getPiece(i + 2, j - 1) != null) {
+                    if (game.getPiece(i + 2, j - 1).getName().equals("N")) {
+                        return true;
+                    }
+                }
+            }
+            if (j + 1 < 8) {
+                if (game.getPiece(i + 2, j + 1) != null) {
+                    if (game.getPiece(i + 2, j + 1).getName().equals("N")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (j + 2 < 8) {
+            if (i + 1 < 8) {
+                if (game.getPiece(i + 1, j + 2) != null) {
+                    if (game.getPiece(i + 1, j + 2).getName().equals("N")) {
+                        return true;
+                    }
+                }
+            }
+            if (i - 1 > -1) {
+                if (game.getPiece(i - 1, j + 2) != null) {
+                    if (game.getPiece(i - 1, j + 2).getName().equals("N")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (j - 2 > -1) {
+            if (i + 1 < 8) {
+                if (game.getPiece(i + 1, j - 2) != null) {
+                    if (game.getPiece(i + 1, j - 2).getName().equals("N")) {
+                        return true;
+                    }
+                }
+            }
+            if (i - 1 > -1) {
+                if (game.getPiece(i - 1, j - 2) != null) {
+                    return game.getPiece(i - 1, j - 2).getName().equals("N");
+                }
+            }
+        }
+        return false;
+    }
+
     private PointsInterface findPointInterface() {
         return new NormalCalculate();
     }
@@ -136,6 +322,7 @@ public class Computer extends Player {
     private Move miniMaxDecision(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException {
         LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
         Move best = null;
+        Move necessaryMove = null;
         int bestValue = Integer.MIN_VALUE;
         for (String key : subset.keySet()) {
             for (Move move1 : subset.get(key)) {
@@ -147,8 +334,12 @@ public class Computer extends Player {
                     Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
                     if (current.getValue() > bestValue){
                         if (!(current.getValue() < -900 && Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k"))) {
-                            best = move1;
-                            bestValue = current.getValue();
+                            if (!isCheckMate()) {
+                                best = move1;
+                                bestValue = current.getValue();
+                            } else {
+                                necessaryMove = current.getKey();
+                            }
                         }
                     } else if (current.getValue() == bestValue && current.getValue() == 0) {
                         if (Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k")) {
@@ -164,6 +355,9 @@ public class Computer extends Player {
                     }
                 }
             }
+        }
+        if (best == null) {
+            return necessaryMove;
         }
         return best;
     }

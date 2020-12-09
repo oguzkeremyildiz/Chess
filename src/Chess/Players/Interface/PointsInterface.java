@@ -1,4 +1,4 @@
-package Chess.Players;/* Created by oguzkeremyildiz on 5.12.2020 */
+package Chess.Players.Interface;/* Created by oguzkeremyildiz on 5.12.2020 */
 
 import Chess.Game;
 
