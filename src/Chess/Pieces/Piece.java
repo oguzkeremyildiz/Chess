@@ -72,7 +72,7 @@ public abstract class Piece {
             case "k":
                 return "King";
             default:
-                return null;
+                return "Bishop";
         }
     }
 
