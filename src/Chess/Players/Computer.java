@@ -330,7 +330,7 @@ public class Computer extends Player {
                 for (int i = 0; i < size; i++) {
                     Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
                     boolean bool = setMove(size, i, move1, false);
-                    move(move1);
+                    Piece enPassant = move(move1);
                     Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
                     if (current.getValue() > bestValue){
                         if (!(current.getValue() < -900 && Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k"))) {
@@ -348,7 +348,7 @@ public class Computer extends Player {
                     }
                     move1.getFrom().setCoordinates(oldCoordinates);
                     setMove(size, i, move1, bool);
-                    undo(move1);
+                    undo(move1, enPassant);
                     alpha = Math.max(alpha, current.getValue());
                     if (alpha >= beta) {
                         return best;
@@ -377,14 +377,14 @@ public class Computer extends Player {
                     for (int i = 0; i < size; i++) {
                         Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
                         boolean bool = setMove(size, i, move1, false);
-                        move(move1);
+                        Piece enPassant = move(move1);
                         Pair<Move, Integer> current = maxValue(!turn, depth - 1, alpha, beta);
                         if (current.getValue() < best.getValue()){
                             best = current;
                         }
                         move1.getFrom().setCoordinates(oldCoordinates);
                         setMove(size, i, move1, bool);
-                        undo(move1);
+                        undo(move1, enPassant);
                         beta = Math.min(beta, current.getValue());
                         if (alpha >= beta) {
                             return best;
@@ -411,14 +411,14 @@ public class Computer extends Player {
                     for (int i = 0; i < size; i++) {
                         Coordinates oldCoordinates = (Coordinates) move1.getFrom().getCoordinates().clone();
                         boolean bool = setMove(size, i, move1, false);
-                        move(move1);
+                        Piece enPassant = move(move1);
                         Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
                         if (current.getValue() > best.getValue()){
                             best = current;
                         }
                         move1.getFrom().setCoordinates(oldCoordinates);
                         setMove(size, i, move1, bool);
-                        undo(move1);
+                        undo(move1, enPassant);
                         alpha = Math.max(alpha, current.getValue());
                         if (alpha >= beta) {
                             return best;
@@ -430,7 +430,7 @@ public class Computer extends Player {
         return best;
     }
 
-    private void undo(Move move) {
+    private void undo(Move move, Piece enPassant) {
         int from1 = move.getToCoordinates().getX();
         int from2 = move.getToCoordinates().getY();
         int to1 = move.getFrom().getCoordinates().getX();
@@ -445,15 +445,51 @@ public class Computer extends Player {
             game.setPiece(from1, from2, null);
             game.setPiece(to1, to2, piece);
         }
+        if (enPassant != null) {
+            game.setPiece(enPassant.getCoordinates().getX(), enPassant.getCoordinates().getY(), enPassant);
+        }
     }
 
-    private void move(Move move) {
+    private Piece move(Move move) {
         int currentI = move.getFrom().getCoordinates().getX();
         int currentJ = move.getFrom().getCoordinates().getY();
         Piece piece = move.getFrom();
         piece.setCoordinates(new Coordinates(move.getToCoordinates().getX(), move.getToCoordinates().getY()));
         game.setPiece(currentI, currentJ, null);
         game.setPiece(move.getToCoordinates().getX(), move.getToCoordinates().getY(), piece);
+        if (currentI == 3 && move.getFrom().getName().equals("P") && Math.abs(currentJ - move.getToCoordinates().getY()) > 0 && move.getTo() == null) {
+            if (currentJ - 1 > -1) {
+                Piece temporary = game.getPiece(currentI, currentJ - 1);
+                if (temporary != null && temporary.getName().equals("p")) {
+                    game.setPiece(currentI, currentJ - 1, null);
+                    return temporary;
+                }
+            }
+            if (currentJ + 1 < 8) {
+                Piece temporary = game.getPiece(currentI, currentJ + 1);
+                if (temporary != null && temporary.getName().equals("p")) {
+                    game.setPiece(currentI, currentJ + 1, null);
+                    return temporary;
+                }
+            }
+        }
+        if (currentI == 4 && move.getFrom().getName().equals("p") && Math.abs(currentJ - move.getToCoordinates().getY()) > 0 && move.getTo() == null) {
+            if (currentJ - 1 > -1) {
+                Piece temporary = game.getPiece(currentI, currentJ - 1);
+                if (temporary != null && temporary.getName().equals("P")) {
+                    game.setPiece(currentI, currentJ - 1, null);
+                    return temporary;
+                }
+            }
+            if (currentJ + 1 < 8) {
+                Piece temporary = game.getPiece(currentI, currentJ + 1);
+                if (temporary != null && temporary.getName().equals("P")) {
+                    game.setPiece(currentI, currentJ + 1, null);
+                    return temporary;
+                }
+            }
+        }
+        return null;
     }
 
     private Pair<Boolean, String[]> isOpeningsContainBoardOrder() {
