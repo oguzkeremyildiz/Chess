@@ -7,8 +7,13 @@ import java.util.Scanner;
 
 public class Pawn extends Piece {
 
+    private boolean enPassant;
+    private boolean stop;
+
    public Pawn(Coordinates coordinates, boolean color, String name) {
        super(coordinates, color, name);
+       enPassant = false;
+       stop = false;
    }
 
     @Override
@@ -29,7 +34,7 @@ public class Pawn extends Piece {
            if (i == 6 && game.getPiece(4, j) == null && game.getPiece(5, j) == null) {
                getPossibles().add(new Coordinates(4, j));
            }
-           if (i == 3) {
+           if (i == 3 && enPassant) {
                if (j - 1 > -1) {
                    if (game.getPiece(i, j - 1) != null && game.getPiece(i, j - 1).getName().equals("p") && game.getPiece(i - 1, j - 1) == null) {
                        getPossibles().add(new Coordinates(i - 1, j - 1));
@@ -56,7 +61,7 @@ public class Pawn extends Piece {
            if (i == 1 && game.getPiece(3, j) == null && game.getPiece(2, j) == null) {
                getPossibles().add(new Coordinates(3, j));
            }
-           if (i == 4) {
+           if (i == 4 && enPassant) {
                if (j - 1 > -1) {
                    if (game.getPiece(i, j - 1) != null && game.getPiece(i, j - 1).getName().equals("P") && game.getPiece(i + 1, j - 1) == null) {
                        getPossibles().add(new Coordinates(i + 1, j - 1));
@@ -69,6 +74,22 @@ public class Pawn extends Piece {
                }
            }
        }
+    }
+
+    public boolean getEnPassant() {
+       return enPassant;
+    }
+
+    public void setEnPassant() {
+       enPassant = !enPassant;
+    }
+
+    public boolean getStop() {
+       return stop;
+    }
+
+    public void setStop() {
+       stop = true;
     }
 
     @Override

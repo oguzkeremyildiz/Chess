@@ -51,6 +51,51 @@ public class Game {
         board[i][j] = piece;
     }
 
+    public void setEnPassant(boolean turn) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (getPiece(i, j) != null && getPiece(i, j).toString().equals("Pawn") && getPiece(i, j).isTurn() == turn) {
+                    Pawn pawn = ((Pawn) getPiece(i, j));
+                    if (pawn.getEnPassant()) {
+                        pawn.setEnPassant();
+                    } else if (!pawn.getStop()) {
+                        if (turn) {
+                            if (i == 3) {
+                                if (j - 1 > -1) {
+                                    if (getPiece(i, j - 1) != null && getPiece(i, j - 1).getName().equals("p") && getPiece(i - 1, j - 1) == null) {
+                                        pawn.setEnPassant();
+                                        pawn.setStop();
+                                    }
+                                }
+                                if (j + 1 < 8) {
+                                    if (getPiece(i, j + 1) != null && getPiece(i, j + 1).getName().equals("p") && getPiece(i - 1, j + 1) == null) {
+                                        pawn.setEnPassant();
+                                        pawn.setStop();
+                                    }
+                                }
+                            }
+                        } else {
+                            if (i == 4) {
+                                if (j - 1 > -1) {
+                                    if (getPiece(i, j - 1) != null && getPiece(i, j - 1).getName().equals("P") && getPiece(i + 1, j - 1) == null) {
+                                        pawn.setEnPassant();
+                                        pawn.setStop();
+                                    }
+                                }
+                                if (j + 1 < 8) {
+                                    if (getPiece(i, j + 1) != null && getPiece(i, j + 1).getName().equals("P") && getPiece(i + 1, j + 1) == null) {
+                                        pawn.setEnPassant();
+                                        pawn.setStop();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void setBoard() {
         /* blacks */
         board[0][0] = new Rook(new Coordinates(0, 0), false, "r");

@@ -16,6 +16,7 @@ public class Main {
         PrintBoard printBoard = new UI(game, true);
         boolean turn = true;
         while (game.finished()) {
+            game.setEnPassant(turn);
             Move bestMove;
             if (turn) {
                 printBoard.print(game);
