@@ -344,7 +344,7 @@ public class Computer extends Player {
                     boolean bool = setMove(size, i, move1, false);
                     Piece enPassant = move(move1);
                     Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
-                    if (current.getValue() > bestValue){
+                    if (current.getValue() > bestValue) {
                         if (!(current.getValue() < -900 && Math.abs(stringMap.get(move1.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move1.toString().charAt(0) + "").equals("k"))) {
                             if (!isCheckMate()) {
                                 best = move1;
@@ -391,7 +391,7 @@ public class Computer extends Player {
                         boolean bool = setMove(size, i, move1, false);
                         Piece enPassant = move(move1);
                         Pair<Move, Integer> current = maxValue(!turn, depth - 1, alpha, beta);
-                        if (current.getValue() < best.getValue()){
+                        if (current.getValue() < best.getValue()) {
                             best = current;
                         }
                         move1.getFrom().setCoordinates(oldCoordinates);
@@ -425,7 +425,7 @@ public class Computer extends Player {
                         boolean bool = setMove(size, i, move1, false);
                         Piece enPassant = move(move1);
                         Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
-                        if (current.getValue() > best.getValue()){
+                        if (current.getValue() > best.getValue()) {
                             best = current;
                         }
                         move1.getFrom().setCoordinates(oldCoordinates);
