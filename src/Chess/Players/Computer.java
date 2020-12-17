@@ -58,18 +58,18 @@ public class Computer extends Player {
         return "GO";
     }
 
-    private LinkedHashMap<String, HashSet<Move>> setLinkedHashMap() {
+    private LinkedHashMap<String, HashSet<Move>> setLinkedHashMap(boolean turn) {
         PointsInterface pointsInterface = findPointInterface();
         int point = pointsInterface.calculatePoints(game);
         LinkedHashMap<String, HashSet<Move>> map = new LinkedHashMap<>();
-        if (point > -1) {
-            map.put("IO", new HashSet<>());
+        if (turn || point < 0) {
             map.put("TY", new HashSet<>());
+            map.put("IO", new HashSet<>());
             map.put("N", new HashSet<>());
             map.put("GO", new HashSet<>());
         } else {
-            map.put("TY", new HashSet<>());
             map.put("IO", new HashSet<>());
+            map.put("TY", new HashSet<>());
             map.put("N", new HashSet<>());
             map.put("GO", new HashSet<>());
         }
@@ -77,7 +77,7 @@ public class Computer extends Player {
     }
 
     private LinkedHashMap<String, HashSet<Move>> constructCandidates(boolean turn) {
-        LinkedHashMap<String, HashSet<Move>> map = setLinkedHashMap();
+        LinkedHashMap<String, HashSet<Move>> map = setLinkedHashMap(turn);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (game.getPiece(i, j) != null && game.getPiece(i, j).isTurn() == turn) {
