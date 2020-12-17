@@ -28,14 +28,18 @@ public class Game {
         }
         if (!bool1) {
             if (UIFrame.model != null) {
-                UIFrame.model.addElement("black wins.");
+                if (!UIFrame.model.contains("black wins.")) {
+                    UIFrame.model.addElement("black wins.");
+                }
             } else {
                 System.out.println("black wins.");
             }
         }
         if (!bool2) {
             if (UIFrame.model != null) {
-                UIFrame.model.addElement("white wins.");
+                if (!UIFrame.model.contains("white wins.")) {
+                    UIFrame.model.addElement("white wins.");
+                }
             } else {
                 System.out.println("white wins.");
             }

@@ -121,7 +121,7 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (turn) {
+        if (turn && game.finished()) {
             if (!dragged){
                 int index1 = 0;
                 int index2 = 0;

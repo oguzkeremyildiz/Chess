@@ -38,6 +38,9 @@ public class Computer extends Player {
 
     private String findType(Piece piece, Coordinates coordinates) {
         if (piece.getName().equalsIgnoreCase("p")) {
+            if (game.getPiece(coordinates.getX(), coordinates.getY()) != null) {
+                return "TY";
+            }
             return "IO";
         }
         if (piece.getName().equals(piece.getName().toLowerCase()) && piece.getCoordinates().getX() < coordinates.getX() && !piece.getName().equals("k")) {
@@ -56,11 +59,20 @@ public class Computer extends Player {
     }
 
     private LinkedHashMap<String, HashSet<Move>> setLinkedHashMap() {
+        PointsInterface pointsInterface = findPointInterface();
+        int point = pointsInterface.calculatePoints(game);
         LinkedHashMap<String, HashSet<Move>> map = new LinkedHashMap<>();
-        map.put("IO", new HashSet<>());
-        map.put("TY", new HashSet<>());
-        map.put("N", new HashSet<>());
-        map.put("GO", new HashSet<>());
+        if (point > -1) {
+            map.put("IO", new HashSet<>());
+            map.put("TY", new HashSet<>());
+            map.put("N", new HashSet<>());
+            map.put("GO", new HashSet<>());
+        } else {
+            map.put("TY", new HashSet<>());
+            map.put("IO", new HashSet<>());
+            map.put("N", new HashSet<>());
+            map.put("GO", new HashSet<>());
+        }
         return map;
     }
 
@@ -338,7 +350,7 @@ public class Computer extends Player {
                                 best = move1;
                                 bestValue = current.getValue();
                             } else {
-                                necessaryMove = current.getKey();
+                                necessaryMove = move1;
                             }
                         }
                     } else if (current.getValue() == bestValue && current.getValue() == 0) {
