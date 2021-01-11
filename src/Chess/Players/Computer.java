@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class Computer extends Player {
 
     private HashMap<String[], String[]> openings;
-    private static int MAX_DEPTH = 6;
+    private static int MAX_DEPTH = 7;
 
     public Computer(Game game) throws FileNotFoundException {
         super(game);
