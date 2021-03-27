@@ -1,6 +1,7 @@
 package Chess.Players.Interface;/* Created by oguzkeremyildiz on 5.12.2020 */
 
 import Chess.Game;
+import Chess.Piece.Piece;
 
 import java.util.HashMap;
 
@@ -8,13 +9,21 @@ public class NormalCalculate implements PointsInterface {
 
     private HashMap<String, Integer> pointMap = setMap();
 
+    private String pieceNameToString(Piece piece) {
+        String pieceName = piece.getName().toString();
+        if (!piece.color()) {
+            return pieceName.toLowerCase();
+        }
+        return pieceName;
+    }
+
     @Override
     public int calculatePoints(Game game) {
         int sum = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (game.getPiece(i, j) != null) {
-                    sum += pointMap.get(game.getPiece(i, j).getName());
+                    sum += pointMap.get(pieceNameToString(game.getPiece(i, j)));
                 }
             }
         }

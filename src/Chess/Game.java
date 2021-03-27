@@ -1,15 +1,18 @@
 package Chess;
 
-import Chess.Pieces.*;
+import Chess.Piece.*;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 public class Game {
 
     private Piece[][] board;
+    private LinkedList<String> moves;
     public static final Map<Integer, Integer> INTEGER_MAP = Map.of(8, 0, 7, 1, 6,2, 5, 3, 4, 4, 3, 5, 2, 6, 1, 7, 0, 8);
 
     public Game() {
+        moves = new LinkedList<>();
         board = new Piece[8][8];
     }
 
@@ -18,10 +21,10 @@ public class Game {
         boolean bool2 = false;
         for (Piece[] pieces : board) {
             for (int j = 0; j < board[0].length; j++) {
-                if (pieces[j] != null && pieces[j].getName().equalsIgnoreCase("K") && pieces[j].isTurn()) {
+                if (pieces[j] != null && pieces[j].getName().equals(PieceName.K) && pieces[j].color()) {
                     bool1 = true;
                 }
-                if (pieces[j] != null && pieces[j].getName().equalsIgnoreCase("K") && !pieces[j].isTurn()) {
+                if (pieces[j] != null && pieces[j].getName().equals(PieceName.K) && !pieces[j].color()) {
                     bool2 = true;
                 }
             }
@@ -47,6 +50,14 @@ public class Game {
         return bool1 && bool2;
     }
 
+    public String getLastMove() {
+        return moves.getLast();
+    }
+
+    public void addMove(String move) {
+        moves.add(move);
+    }
+
     public Piece getPiece(int i, int j) {
         return board[i][j];
     }
@@ -55,75 +66,30 @@ public class Game {
         board[i][j] = piece;
     }
 
-    public void setEnPassant(boolean turn) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (getPiece(i, j) != null && getPiece(i, j).toString().equals("Pawn") && getPiece(i, j).isTurn() == turn) {
-                    Pawn pawn = ((Pawn) getPiece(i, j));
-                    if (pawn.getEnPassant()) {
-                        pawn.setEnPassant();
-                    } else if (!pawn.getStop()) {
-                        if (turn) {
-                            if (i == 3) {
-                                if (j - 1 > -1) {
-                                    if (getPiece(i, j - 1) != null && getPiece(i, j - 1).getName().equals("p") && getPiece(i - 1, j - 1) == null) {
-                                        pawn.setEnPassant();
-                                        pawn.setStop();
-                                    }
-                                }
-                                if (j + 1 < 8) {
-                                    if (getPiece(i, j + 1) != null && getPiece(i, j + 1).getName().equals("p") && getPiece(i - 1, j + 1) == null) {
-                                        pawn.setEnPassant();
-                                        pawn.setStop();
-                                    }
-                                }
-                            }
-                        } else {
-                            if (i == 4) {
-                                if (j - 1 > -1) {
-                                    if (getPiece(i, j - 1) != null && getPiece(i, j - 1).getName().equals("P") && getPiece(i + 1, j - 1) == null) {
-                                        pawn.setEnPassant();
-                                        pawn.setStop();
-                                    }
-                                }
-                                if (j + 1 < 8) {
-                                    if (getPiece(i, j + 1) != null && getPiece(i, j + 1).getName().equals("P") && getPiece(i + 1, j + 1) == null) {
-                                        pawn.setEnPassant();
-                                        pawn.setStop();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public void setBoard() {
         /* blacks */
-        board[0][0] = new Rook(new Coordinates(0, 0), false, "r");
-        board[0][7] = new Rook(new Coordinates(0, 7), false, "r");
-        board[0][3] = new Queen(new Coordinates(0, 3), false, "q");
-        board[0][4] = new King(new Coordinates(0, 4), false, "k");
-        board[0][2] = new Bishop(new Coordinates(0, 2), false, "b");
-        board[0][5] = new Bishop(new Coordinates(0, 5), false, "b");
-        board[0][1] = new Knight(new Coordinates(0, 1), false, "n");
-        board[0][6] = new Knight(new Coordinates(0, 6), false, "n");
+        board[0][0] = new Piece(false, PieceName.R, null);
+        board[0][7] = new Piece(false, PieceName.R, null);
+        board[0][3] = new Piece(false, PieceName.Q, null);
+        board[0][4] = new Piece(false, PieceName.K, null);
+        board[0][2] = new Piece(false, PieceName.B, null);
+        board[0][5] = new Piece(false, PieceName.B, null);
+        board[0][1] = new Piece(false, PieceName.N, null);
+        board[0][6] = new Piece(false, PieceName.N, null);
         for (int i = 0; i < board[0].length; i++) {
-            board[1][i] = new Pawn(new Coordinates(1, i), false, "p");
+            board[1][i] = new Piece(false, PieceName.P, null);
         }
         /* whites */
-        board[7][0] = new Rook(new Coordinates(7, 0), true, "R");
-        board[7][7] = new Rook(new Coordinates(7, 7), true, "R");
-        board[7][3] = new Queen(new Coordinates(7, 3), true, "Q");
-        board[7][4] = new King(new Coordinates(7, 4), true, "K");
-        board[7][2] = new Bishop(new Coordinates(7, 2), true, "B");
-        board[7][5] = new Bishop(new Coordinates(7, 5), true, "B");
-        board[7][1] = new Knight(new Coordinates(7, 1), true, "N");
-        board[7][6] = new Knight(new Coordinates(7, 6), true, "N");
+        board[7][0] = new Piece(true, PieceName.R, null);
+        board[7][7] = new Piece(true, PieceName.R, null);
+        board[7][3] = new Piece(true, PieceName.Q, null);
+        board[7][4] = new Piece(true, PieceName.K, null);
+        board[7][2] = new Piece(true, PieceName.B, null);
+        board[7][5] = new Piece(true, PieceName.B, null);
+        board[7][1] = new Piece(true, PieceName.N, null);
+        board[7][6] = new Piece(true, PieceName.N, null);
         for (int i = 0; i < board[0].length; i++) {
-            board[6][i] = new Pawn(new Coordinates(6, i), true, "P");
+            board[6][i] = new Piece(true, PieceName.P, null);
         }
     }
 

@@ -1,16 +1,20 @@
 package Chess;/* Created by oguzkeremyildiz on 1.12.2020 */
 
-import Chess.Pieces.Piece;
+import Chess.Piece.Piece;
+import Chess.Piece.PieceName;
 
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class Terminal extends PrintBoard {
+
     private Game game;
     private HashMap<Integer, String> reverseStringMap;
     private HashMap<String, Integer> stringMap;
+    private Search search;
 
-    public Terminal(Game game){
+    public Terminal(Game game, Search search) {
+        this.search = search;
         this.game = game;
         stringMap = setStringMap();
         reverseStringMap = setReverseStringMap();
@@ -49,7 +53,11 @@ public class Terminal extends PrintBoard {
             System.out.print("|");
             for (int j = 0; j < 8; j++) {
                 if (game.getPiece(i, j) != null) {
-                    System.out.print(game.getPiece(i, j).getName());
+                    String name = game.getPiece(i, j).getName().toString();
+                    if (!game.getPiece(i, j).color()) {
+                        name = name.toLowerCase();
+                    }
+                    System.out.print(name);
                 } else {
                     System.out.print(" ");
                 }
@@ -62,13 +70,13 @@ public class Terminal extends PrintBoard {
     }
 
     @Override
-    public void humanMove() {
+    public void humanMove() throws CloneNotSupportedException, FromPieceNullException {
         Scanner scanner = new Scanner(System.in);
         System.out.println();
         System.out.println("Select the piece.");
         int last = stringMap.get(scanner.next());
         int first = Game.INTEGER_MAP.get(scanner.nextInt());
-        while (first > 7 || first < 0 || last > 7 || last < 0 || game.getPiece(first, last) == null || !game.getPiece(first, last).isTurn()) {
+        while (first > 7 || first < 0 || last > 7 || last < 0 || game.getPiece(first, last) == null || !game.getPiece(first, last).color()) {
             System.out.println("Try again.");
             last = stringMap.get(scanner.next());
             first = Game.INTEGER_MAP.get(scanner.nextInt());
@@ -79,14 +87,35 @@ public class Terminal extends PrintBoard {
         int y = stringMap.get(scanner.next());
         System.out.println("Enter the second position to move.");
         int x = Game.INTEGER_MAP.get(scanner.nextInt());
-        while (!piece.contains(new Coordinates(x, y), game, first, last)) {
+        while (!search.search(new Coordinates(first, last)).contains(new Coordinates(x, y))) {
             System.out.println("Cannot be played to this point!");
             y = stringMap.get(scanner.next());
             x = Game.INTEGER_MAP.get(scanner.nextInt());
         }
         System.out.println(piece.getName() + ": played to " + reverseStringMap.get(y) + Game.INTEGER_MAP.get(x) + " coordinates.");
-        piece.play(game, new Coordinates(x, y));
-        //return new Move(piece, game.getPiece(x, y), new Coordinates(x, y));
+        if (piece.getName().equals(PieceName.P) && x == 0) {
+            System.out.println("Choose a piece. (bishop, queen etc.)");
+            String str = scanner.next();
+            switch (str) {
+                case "bishop":
+                    search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.B, null));
+                    break;
+                case "knight":
+                    search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.N, null));
+                    break;
+                case "queen":
+                    search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.Q, null));
+                    break;
+                case "rook":
+                    search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.R, null));
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            search.play(new Coordinates(first, last), new Coordinates(x, y), null);
+        }
+        game.addMove(piece.toString() + new Coordinates(first, last).toString() + "-" + new Coordinates(x, y).toString());
     }
 
 

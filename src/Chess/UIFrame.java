@@ -11,9 +11,9 @@ public class UIFrame extends JFrame implements ActionListener {
     private JList<String> list;
     public static DefaultListModel<String> model;
 
-    public UIFrame(Game game, boolean turn) {
+    public UIFrame(Game game, Search search, boolean turn) {
         setTitle("Chess");
-        screen = new BoardPanel(game, turn);
+        screen = new BoardPanel(game, search, turn);
         JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
         menuBar.add(file);

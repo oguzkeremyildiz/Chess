@@ -1,46 +1,50 @@
 package Chess;/* Created by oguzkeremyildiz on 24.11.2020 */
 
-import Chess.Pieces.Piece;
+import Chess.Piece.Piece;
 
 public class Move implements Cloneable {
 
     private Coordinates toCoordinates;
-    private Piece from;
-    private Piece to;
+    private Coordinates fromCoordinates;
+    private Piece promoted;
 
-    public Move(Piece from, Piece to, Coordinates toCoordinates) {
+    public Move(Coordinates fromCoordinates, Coordinates toCoordinates, Piece promoted) {
         this.toCoordinates = toCoordinates;
-        this.from = from;
-        this.to = to;
+        this.fromCoordinates = fromCoordinates;
+        this.promoted = promoted;
+    }
+
+    public Coordinates getFromCoordinates() {
+        return fromCoordinates;
     }
 
     public Coordinates getToCoordinates() {
         return toCoordinates;
     }
 
-    public Piece getFrom() {
-        return from;
+    public Piece getPromoted() {
+        return promoted;
     }
 
-    public void setFrom(Piece piece) {
-        this.from = piece;
+    public void setToCoordinates(Coordinates toCoordinates) {
+        this.toCoordinates = toCoordinates;
     }
 
-    public String toString(){
-        if (to == null){
-            return from.getName() + from.getCoordinates().toString() + "-" + toCoordinates.toString();
-        } else {
-            return from.getName() + from.getCoordinates().toString() + "x" + toCoordinates.toString();
-        }
+    public void setFromCoordinates(Coordinates fromCoordinates) {
+        this.fromCoordinates = fromCoordinates;
     }
 
-    public Piece getTo() {
-        return to;
+    public void setPromoted(Piece promoted) {
+        this.promoted = promoted;
+    }
+
+    public String toString() {
+        return fromCoordinates.toString() + ": played to " + toCoordinates.toString() + " coordinates.";
     }
 
     @Override
     public int hashCode() {
-        return (this.toCoordinates + " " + this.from + " " + this.to).hashCode();
+        return (this.fromCoordinates + " " + this.toCoordinates).hashCode();
     }
 
     @Override
@@ -49,7 +53,7 @@ public class Move implements Cloneable {
             return false;
         }
         Move move = (Move) obj;
-        return this.toCoordinates.equals(move.getToCoordinates()) && this.from == move.getFrom() && this.to == move.getTo();
+        return this.promoted.equals(move.promoted) && this.toCoordinates.equals(move.toCoordinates) && this.fromCoordinates.equals(move.fromCoordinates);
     }
 
     @Override

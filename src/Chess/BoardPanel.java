@@ -1,12 +1,14 @@
 package Chess;/* Created by oguzkeremyildiz on 2.12.2020 */
 
-import Chess.Pieces.Piece;
+import Chess.Piece.Piece;
+import Chess.Piece.PieceName;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Scanner;
 
 public class BoardPanel extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -15,8 +17,12 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
     private Piece currentPiece;
     private int mouseIndex1;
     private int mouseIndex2;
+    private Search search;
+    private int fromIndex1;
+    private int fromIndex2;
 
-    public BoardPanel(Game game, boolean turn) {
+    public BoardPanel(Game game, Search search,  boolean turn) {
+        this.search = search;
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
         setLayout(null);
@@ -26,32 +32,40 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         setFocusable(true);
     }
 
-    private Image convert(String piece) {
-        switch (piece) {
-            case "r":
+    private Image convert(Piece piece) {
+        switch (piece.getName()) {
+            case R:
+                if (piece.color()) {
+                    return new ImageIcon("white_rook.png").getImage();
+                }
                 return new ImageIcon("black_rook.png").getImage();
-            case "n":
+            case N:
+                if (piece.color()) {
+                    return new ImageIcon("white_knight.png").getImage();
+                }
                 return new ImageIcon("black_knight.png").getImage();
-            case "b":
+            case B:
+                if (piece.color()) {
+                    return new ImageIcon("white_bishop.png").getImage();
+                }
                 return new ImageIcon("black_bishop.png").getImage();
-            case "q":
+            case Q:
+                if (piece.color()) {
+                    return new ImageIcon("white_queen.png").getImage();
+                }
                 return new ImageIcon("black_queen.png").getImage();
-            case "k":
+            case K:
+                if (piece.color()) {
+                    return new ImageIcon("white_king.png").getImage();
+                }
                 return new ImageIcon("black_king.png").getImage();
-            case "p":
+            case P:
+                if (piece.color()) {
+                    return new ImageIcon("white_pawn.png").getImage();
+                }
                 return new ImageIcon("black_pawn.png").getImage();
-            case "R":
-                return new ImageIcon("white_rook.png").getImage();
-            case "N":
-                return new ImageIcon("white_knight.png").getImage();
-            case "B":
-                return new ImageIcon("white_bishop.png").getImage();
-            case "Q":
-                return new ImageIcon("white_queen.png").getImage();
-            case "K":
-                return new ImageIcon("white_king.png").getImage();
-            case "P":
-                return new ImageIcon("white_pawn.png").getImage();
+            default:
+                break;
         }
         return null;
     }
@@ -64,12 +78,12 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (game.getPiece(i, j) != null && game.getPiece(i, j) != currentPiece) {
-                    g.drawImage(convert(game.getPiece(i, j).getName()), 425 + 72 * j, 90 + 72 * i, null);
+                    g.drawImage(convert(game.getPiece(i, j)), 425 + 72 * j, 90 + 72 * i, null);
                 }
             }
         }
-        if (dragged && currentPiece != null){
-            g.drawImage(convert(currentPiece.getName()), mouseIndex1, mouseIndex2, null);
+        if (dragged && currentPiece != null) {
+            g.drawImage(convert(currentPiece), mouseIndex1, mouseIndex2, null);
         }
     }
 
@@ -99,11 +113,55 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                 break;
             }
         }
-        currentPiece.calculateAllPossibleMoves(game, currentPiece.getCoordinates().getX(), currentPiece.getCoordinates().getY());
-        String oldCoordinates = currentPiece.getCoordinates().toString();
-        if (currentPiece.getPossibles().contains(new Coordinates(index2, index1))) {
-            currentPiece.play(game, new Coordinates(index2, index1));
-            UIFrame.model.addElement(currentPiece.getName() + ": played from " + oldCoordinates + " to " + currentPiece.getCoordinates());
+        Coordinates from = new Coordinates(fromIndex1, fromIndex2);
+        Coordinates to = new Coordinates(index2, index1);
+        String oldCoordinates = from.toString();
+        if (search.search(from).contains(to)) {
+            if (currentPiece.getName().equals(PieceName.P) && index2 == 0) {
+                System.out.println("Choose a piece. (bishop, queen etc.)");
+                Scanner scanner = new Scanner(System.in);
+                String piece = scanner.next();
+                switch (piece) {
+                    case "bishop":
+                        try {
+                            search.play(from, to, new Piece(true, PieceName.B, null));
+                        } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                            cloneNotSupportedException.printStackTrace();
+                        }
+                        break;
+                    case "knight":
+                        try {
+                            search.play(from, to, new Piece(true, PieceName.N, null));
+                        } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                            cloneNotSupportedException.printStackTrace();
+                        }
+                        break;
+                    case "queen":
+                        try {
+                            search.play(from, to, new Piece(true, PieceName.Q, null));
+                        } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                            cloneNotSupportedException.printStackTrace();
+                        }
+                        break;
+                    case "rook":
+                        try {
+                            search.play(from, to, new Piece(true, PieceName.R, null));
+                        } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                            cloneNotSupportedException.printStackTrace();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                try {
+                    search.play(from, to, null);
+                } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                    cloneNotSupportedException.printStackTrace();
+                }
+            }
+            game.addMove(currentPiece.toString() + from.toString() + "-" + to.toString());
+            UIFrame.model.addElement(currentPiece.getName() + ": played from " + oldCoordinates + " to " + to);
             turn = false;
         }
         currentPiece = null;
@@ -122,23 +180,23 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
     @Override
     public void mouseDragged(MouseEvent e) {
         if (turn && game.finished()) {
-            if (!dragged){
-                int index1 = 0;
-                int index2 = 0;
+            if (!dragged) {
+                fromIndex2 = 0;
+                fromIndex1 = 0;
                 for (int j = 0; j < 8; j++) {
                     if (425 + 72 * j < e.getX() && 425 + 72 * (j + 1) > e.getX()) {
-                        index1 = j;
+                        fromIndex2 = j;
                         break;
                     }
                 }
                 for (int i = 0; i < 8; i++) {
                     if (90 + 72 * i < e.getY() && 90 + 72 * (i + 1) > e.getY()) {
-                        index2 = i;
+                        fromIndex1 = i;
                         break;
                     }
                 }
-                if (game.getPiece(index2, index1) != null && game.getPiece(index2, index1).getName().toUpperCase().equals(game.getPiece(index2, index1).getName())) {
-                    currentPiece = game.getPiece(index2, index1);
+                if (game.getPiece(fromIndex1, fromIndex2) != null && game.getPiece(fromIndex1, fromIndex2).color()) {
+                    currentPiece = game.getPiece(fromIndex1, fromIndex2);
                 }
                 if (currentPiece != null) {
                     dragged = true;
