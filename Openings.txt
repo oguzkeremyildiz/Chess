@@ -32,6 +32,8 @@ Rh1 Ng1 Bf1 Ke1 Qd1 Bc1 Nb1 Ra1 Ph2 Pg2 Pf2 Pe2 Pd3 Pc2 Pb2 Pa2 rh8 ng8 bf8 ke8 
 e7 e5
 Rh1 Ng1 Bf1 Ke1 Qd1 Bc1 Nb1 Ra1 Ph2 Pg2 Pf2 Pe2 Pd2 Pc2 Pb3 Pa2 rh8 ng8 bf8 ke8 qd8 bc8 nb8 ra8 ph7 pg7 pf7 pe7 pd7 pc7 pb7 pa7
 e7 e5
+Rh1 Ng1 Bf1 Ke1 Qd1 Bb2 Nb1 Ra1 Ph2 Pg2 Pf2 Pe2 Pd2 Pc2 Pb3 Pa2 rh8 ng8 bf8 ke8 qd8 bc8 nb8 ra8 ph7 pg7 pf7 pe5 pd7 pc7 pb7 pa7
+b8 c6
 Rh1 Nf3 Bb5 Ke1 Qd1 Bc1 Nb1 Ra1 Ph2 Pg2 Pf2 Pe4 Pd2 Pc2 Pb2 Pa2 rh8 ng8 bf8 ke8 qd8 bc8 nc6 ra8 ph7 pg7 pf7 pe5 pd7 pc7 pb7 pa7
 g8 f6
 Rh1 Nf3 Bf1 Ke1 Qd1 Bc1 Nb1 Ra1 Ph2 Pg2 Pf2 Pe2 Pd2 Pc2 Pb2 Pa2 rh8 ng8 bf8 ke8 qd8 bc8 nb8 ra8 ph7 pg7 pf7 pe7 pd7 pc7 pb7 pa7
@@ -46,3 +48,7 @@ Rh1 Ng1 Bf1 Ke1 Qd1 Bf4 Nb5 Ra1 Ph2 Pg2 Pf2 Pe2 Pd4 Pc2 Pb2 Pa2 rh8 nf6 bf8 ke8 
 f8 b4
 Rh1 Ng1 Bf1 Ke1 Qd1 Bf4 Nb5 Ra1 Ph2 Pg2 Pf2 Pe2 Pd4 Pc3 Pb2 Pa2 rh8 nf6 bb4 ke8 qd8 bc8 nb8 ra8 ph7 pg7 pf7 pe6 pd5 pc7 pb7 pa7
 b4 a5
+Rh1 Ng1 Bf1 Ke1 Qd1 Bc1 Nc3 Ra1 Ph2 Pg2 Pf2 Pe2 Pd4 Pc4 Pb2 Pa2 rh8 ng8 bf8 ke8 qd8 bc8 nb8 ra8 ph7 pg7 pf7 pe6 pd5 pc7 pb7 pa7
+g8 f6
+Rh1 Ng1 Bf1 Ke1 Qd1 Bc1 Nb1 Ra1 Ph2 Pg2 Pf2 Pe3 Pd2 Pc4 Pb2 Pa2 rh8 ng8 bf8 ke8 qd8 bc8 nb8 ra8 ph7 pg7 pf7 pe7 pd7 pc5 pb7 pa7
+e7 e5
