@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Scanner;
 
 public class BoardPanel extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -118,11 +117,12 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         String oldCoordinates = from.toString();
         if (search.search(from).contains(to)) {
             if (currentPiece.getName().equals(PieceName.P) && index2 == 0) {
-                System.out.println("Choose a piece. (bishop, queen etc.)");
-                Scanner scanner = new Scanner(System.in);
-                String piece = scanner.next();
+                String piece = JOptionPane.showInputDialog("Choose a piece. (bishop, queen etc.)");
                 switch (piece) {
                     case "bishop":
+                    case "b":
+                    case "B":
+                    case "Bishop":
                         try {
                             search.play(from, to, new Piece(true, PieceName.B, null));
                         } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
@@ -130,6 +130,9 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                         }
                         break;
                     case "knight":
+                    case "Knight":
+                    case "N":
+                    case "n":
                         try {
                             search.play(from, to, new Piece(true, PieceName.N, null));
                         } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
@@ -137,6 +140,9 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                         }
                         break;
                     case "queen":
+                    case "Queen":
+                    case "q":
+                    case "Q":
                         try {
                             search.play(from, to, new Piece(true, PieceName.Q, null));
                         } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
@@ -144,6 +150,9 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                         }
                         break;
                     case "rook":
+                    case "r":
+                    case "Rook":
+                    case "R":
                         try {
                             search.play(from, to, new Piece(true, PieceName.R, null));
                         } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
