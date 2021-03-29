@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class Computer extends Player {
 
     private HashMap<String[], String[]> openings;
-    private static int MAX_DEPTH = 7;
+    private static int MAX_DEPTH = 5;
     private Search search;
 
     public Computer(Game game, Search search) throws FileNotFoundException {
@@ -108,7 +108,20 @@ public class Computer extends Player {
         return new NormalCalculate();
     }
 
+    private int setMaxDepth() {
+        int pieceCount = 0;
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (game.getPiece(i, j) != null) {
+                    pieceCount++;
+                }
+            }
+        }
+        return pieceCount < 20 ? 7 : 5;
+    }
+
     private Move miniMaxDecision(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException, FromPieceNullException {
+        MAX_DEPTH = setMaxDepth();
         LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
         Move best = null;
         int bestValue = Integer.MIN_VALUE;
