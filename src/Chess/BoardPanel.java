@@ -117,7 +117,7 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         String oldCoordinates = from.toString();
         if (search.search(from).contains(to)) {
             if (currentPiece.getName().equals(PieceName.P) && index2 == 0) {
-                String piece = JOptionPane.showInputDialog("Choose a piece. (bishop, queen etc.)");
+                String piece = JOptionPane.showInputDialog("Choose a piece. (bishop, queen etc.)", "queen");
                 switch (piece) {
                     case "bishop":
                     case "b":
