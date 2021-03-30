@@ -8,10 +8,12 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.HashSet;
 
 public class BoardPanel extends JPanel implements MouseListener, MouseMotionListener {
 
     private Game game;
+    private final HashSet<String> set;
     private boolean turn, dragged;
     private Piece currentPiece;
     private int mouseIndex1;
@@ -29,6 +31,28 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         this.turn = turn;
         dragged = false;
         setFocusable(true);
+        this.set = set();
+    }
+
+    private HashSet<String> set() {
+        HashSet<String> set = new HashSet<>();
+        set.add("q");
+        set.add("Q");
+        set.add("queen");
+        set.add("Queen");
+        set.add("r");
+        set.add("rook");
+        set.add("R");
+        set.add("Rook");
+        set.add("Bishop");
+        set.add("b");
+        set.add("B");
+        set.add("bishop");
+        set.add("Knight");
+        set.add("knight");
+        set.add("n");
+        set.add("N");
+        return set;
     }
 
     private Image convert(Piece piece) {
@@ -117,7 +141,10 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         String oldCoordinates = from.toString();
         if (search.search(from).contains(to)) {
             if (currentPiece.getName().equals(PieceName.P) && index2 == 0) {
-                String piece = JOptionPane.showInputDialog("Choose a piece. (bishop, queen etc.)", "queen");
+                String piece = "";
+                while (!set.contains(piece)) {
+                    piece = JOptionPane.showInputDialog("Choose a piece. (bishop, queen etc.)", "queen");
+                }
                 switch (piece) {
                     case "bishop":
                     case "b":
