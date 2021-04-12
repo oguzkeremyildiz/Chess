@@ -4,6 +4,7 @@ import Chess.Piece.*;
 
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Game {
 
@@ -64,6 +65,51 @@ public class Game {
 
     public void setPiece(int i, int j, Piece piece) {
         board[i][j] = piece;
+    }
+
+    private boolean findBoolean(String str) {
+        if (str.equals("false")) {
+            return false;
+        }
+        return true;
+    }
+
+    private PieceName findPieceName(String str) {
+        switch (str) {
+            case "P":
+                return PieceName.P;
+            case "N":
+                return PieceName.N;
+            case "B":
+                return PieceName.B;
+            case "R":
+                return PieceName.R;
+            case "Q":
+                return PieceName.Q;
+            case "K":
+                return PieceName.K;
+        }
+        return null;
+    }
+
+    private Coordinates findCoordinates(String str) {
+        if (str.equals("null")) {
+            return null;
+        }
+        return new Coordinates(str.charAt(0), str.charAt(1));
+    }
+
+    public void setBoard(Scanner source) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                setPiece(i, j, null);
+            }
+        }
+        while (source.hasNext()) {
+            String line = source.nextLine();
+            String[] array = line.split(" ");
+            board[Integer.parseInt(array[0])][Integer.parseInt(array[1])] = new Piece(findBoolean(array[3]), findPieceName(array[2]), findCoordinates(array[4]));
+        }
     }
 
     public void setBoard() {
