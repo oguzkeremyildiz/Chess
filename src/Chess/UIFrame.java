@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.Scanner;
 
@@ -26,7 +27,9 @@ public class UIFrame extends JFrame implements ActionListener {
         JMenu file = new JMenu("File");
         menuBar.add(file);
         JMenuItem save = new JMenuItem("Save");
+        save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         JMenuItem open = new JMenuItem("Open");
+        open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         file.add(open);
         file.add(save);
         getContentPane().add(BorderLayout.NORTH, menuBar);
@@ -63,6 +66,7 @@ public class UIFrame extends JFrame implements ActionListener {
         try {
             Scanner source = new Scanner(file);
             game.setBoard(source);
+            model.clear();
             refresh();
         } catch (Exception e) {
             status.setText("Error Opening " + file.getName());
