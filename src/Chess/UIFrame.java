@@ -63,6 +63,7 @@ public class UIFrame extends JFrame implements ActionListener {
         try {
             Scanner source = new Scanner(file);
             game.setBoard(source);
+            refresh();
         } catch (Exception e) {
             status.setText("Error Opening " + file.getName());
         }
