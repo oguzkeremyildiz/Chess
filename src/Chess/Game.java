@@ -52,7 +52,10 @@ public class Game {
     }
 
     public String getLastMove() {
-        return moves.getLast();
+        if (!moves.isEmpty()) {
+            return moves.getLast();
+        }
+        return null;
     }
 
     public void addMove(String move) {

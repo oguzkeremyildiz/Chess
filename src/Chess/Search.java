@@ -397,14 +397,14 @@ public class Search {
         if (current.getX() == 3) {
             if (current.getY() - 1 > -1) {
                 if (game.getPiece(current.getX(), current.getY() - 1) != null && !game.getPiece(current.getX(), current.getY() - 1).color() && game.getPiece(current.getX(), current.getY() - 1).getName().equals(PieceName.P) && game.getPiece(current.getX() - 1, current.getY() - 1) == null) {
-                    if (game.getLastMove().substring(0, 1).equalsIgnoreCase("p") && Math.abs(Integer.parseInt(game.getLastMove().substring(2, 3)) - Integer.parseInt(game.getLastMove().substring(5, 6))) == 2 && current.getX() == Integer.parseInt(game.getLastMove().substring(5, 6))) {
+                    if (game.getLastMove() != null && game.getLastMove().substring(0, 1).equalsIgnoreCase("p") && Math.abs(Integer.parseInt(game.getLastMove().substring(2, 3)) - Integer.parseInt(game.getLastMove().substring(5, 6))) == 2 && current.getX() == Integer.parseInt(game.getLastMove().substring(5, 6))) {
                         possibles.add(new Coordinates(current.getX() - 1, current.getY() - 1));
                     }
                 }
             }
             if (current.getY() + 1 < 8) {
                 if (game.getPiece(current.getX(), current.getY() + 1) != null && !game.getPiece(current.getX(), current.getY() + 1).color() && game.getPiece(current.getX(), current.getY() + 1).getName().equals(PieceName.P) && game.getPiece(current.getX() - 1, current.getY() + 1) == null) {
-                    if (game.getLastMove().substring(0, 1).equalsIgnoreCase("p") && Math.abs(Integer.parseInt(game.getLastMove().substring(2, 3)) - Integer.parseInt(game.getLastMove().substring(5, 6))) == 2 && current.getX() == Integer.parseInt(game.getLastMove().substring(5, 6))) {
+                    if (game.getLastMove() != null && game.getLastMove().substring(0, 1).equalsIgnoreCase("p") && Math.abs(Integer.parseInt(game.getLastMove().substring(2, 3)) - Integer.parseInt(game.getLastMove().substring(5, 6))) == 2 && current.getX() == Integer.parseInt(game.getLastMove().substring(5, 6))) {
                         possibles.add(new Coordinates(current.getX() - 1, current.getY() + 1));
                     }
                 }
