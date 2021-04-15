@@ -84,3 +84,5 @@ Rh1 Nf3 Bc4 Ke1 Qd1 Bc1 Nb1 Ra1 Ph2 Pg2 Pf2 Pe4 Pd2 Pc2 Pb4 Pa2 rh8 ng8 bc5 ke8 
 c5 b4
 Rh1 Nf3 Bc4 Ke1 Qd1 Bc1 Nb1 Ra1 Ph2 Pg2 Pf2 Pe4 Pd2 Pc3 Pa2 rh8 ng8 bb4 ke8 qd8 bc8 nc6 ra8 ph7 pg7 pf7 pe5 pd7 pc7 pb7 pa7
 b4 a5
+Rh1 Nf3 Bc4 Ke1 Qd1 Bc1 Nb1 Ra1 Ph2 Pg2 Pf2 Pe4 Pd3 Pc2 Pb2 Pa2 rh8 ng8 bc5 ke8 qd8 bc8 nc6 ra8 ph7 pg7 pf7 pe5 pd7 pc7 pb7 pa7
+g8 f6
