@@ -2,6 +2,7 @@ package Chess;
 
 import Chess.Piece.*;
 
+import javax.swing.*;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Scanner;
@@ -102,7 +103,7 @@ public class Game {
         return new Coordinates(str.charAt(0), str.charAt(1));
     }
 
-    public void setBoard(Scanner source) {
+    public void setBoard(Scanner source, DefaultListModel<String> model) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 setPiece(i, j, null);
@@ -110,8 +111,15 @@ public class Game {
         }
         while (source.hasNext()) {
             String line = source.nextLine();
+            if (line.equals("")) {
+                break;
+            }
             String[] array = line.split(" ");
             board[Integer.parseInt(array[0])][Integer.parseInt(array[1])] = new Piece(findBoolean(array[3]), findPieceName(array[2]), findCoordinates(array[4]));
+        }
+        while (source.hasNext()) {
+            String line = source.nextLine();
+            model.addElement(line);
         }
     }
 

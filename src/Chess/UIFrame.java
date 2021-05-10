@@ -65,8 +65,8 @@ public class UIFrame extends JFrame implements ActionListener {
     private void open(File file) {
         try {
             Scanner source = new Scanner(file);
-            game.setBoard(source);
             model.clear();
+            game.setBoard(source, model);
             refresh();
         } catch (Exception e) {
             status.setText("Error Opening " + file.getName());
@@ -88,6 +88,10 @@ public class UIFrame extends JFrame implements ActionListener {
                         out.println();
                     }
                 }
+            }
+            out.println();
+            for (int i = 0; i < model.size(); i++) {
+                out.println(model.get(i));
             }
             out.close();
             status.setText(file.getName() + " Saved ");
