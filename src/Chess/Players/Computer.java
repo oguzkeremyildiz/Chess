@@ -16,10 +16,12 @@ public class Computer extends Player {
 
     private HashMap<String[], String[]> openings;
     private static int MAX_DEPTH = 5;
-    private Search search;
+    private final Search search;
+    private final PointsInterface pointsInterface;
 
-    public Computer(Game game, Search search) throws FileNotFoundException {
+    public Computer(Game game, Search search, PointsInterface pointsInterface) throws FileNotFoundException {
         super(game);
+        this.pointsInterface = pointsInterface;
         openings = new HashMap<>();
         stringMap = setStringMap();
         this.search = search;
@@ -59,8 +61,8 @@ public class Computer extends Player {
     }
 
     private LinkedHashMap<String, HashSet<Move>> setLinkedHashMap(boolean turn) {
-        PointsInterface pointsInterface = findPointInterface();
-        int point = pointsInterface.calculatePoints(game);
+        PointsInterface pointsInterface = new NormalCalculate();
+        int point = (int) pointsInterface.calculatePoints(game);
         LinkedHashMap<String, HashSet<Move>> map = new LinkedHashMap<>();
         if (turn || point < 0) {
             map.put("TY", new HashSet<>());
@@ -104,10 +106,6 @@ public class Computer extends Player {
         return map;
     }
 
-    private PointsInterface findPointInterface() {
-        return new NormalCalculate();
-    }
-
     private int setMaxDepth() {
         int pieceCount = 0;
         for (int i = 0; i < 8; i++) {
@@ -117,19 +115,22 @@ public class Computer extends Player {
                 }
             }
         }
+        if (pieceCount < 6) {
+            return 9;
+        }
         return pieceCount < 20 ? 7 : 5;
     }
 
-    private Move miniMaxDecision(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException, FromPieceNullException {
+    private Move miniMaxDecision(boolean turn, int depth, double alpha, double beta) throws CloneNotSupportedException, FromPieceNullException {
         MAX_DEPTH = setMaxDepth();
         LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
         Move best = null;
-        int bestValue = Integer.MIN_VALUE;
+        double bestValue = Double.MIN_VALUE;
         for (String key : subset.keySet()) {
             for (Move move : subset.get(key)) {
                 BackMove backMove = search.play(move);
                 Coordinates oldCoordinates = (Coordinates) move.getFromCoordinates().clone();
-                Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
+                Pair<Move, Double> current = minValue(!turn, depth - 1, alpha, beta);
                 if (current.getValue() > bestValue) {
                     if (!(current.getValue() < -900 && Math.abs(stringMap.get(move.getToCoordinates().toString().charAt(0) + "") - stringMap.get(oldCoordinates.toString().charAt(0) + "")) > 1 && (move.toString().charAt(0) + "").equals("k"))) {
                         best = move;
@@ -150,19 +151,18 @@ public class Computer extends Player {
         return best;
     }
 
-    private Pair<Move, Integer> minValue(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException, FromPieceNullException {
-        Pair<Move, Integer> best;
-        PointsInterface pointsInterface = findPointInterface();
-        int point = pointsInterface.calculatePoints(game);
+    private Pair<Move, Double> minValue(boolean turn, int depth, double alpha, double beta) throws CloneNotSupportedException, FromPieceNullException {
+        Pair<Move, Double> best;
+        double point = pointsInterface.calculatePoints(game);
         if (depth == 0 || point > 900 || point < -900) {
             return new Pair<>(null, point);
         } else {
-            best = new Pair<>(null, Integer.MAX_VALUE);
+            best = new Pair<>(null, Double.MAX_VALUE);
             LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
             for (String key : subset.keySet()) {
                 for (Move move : subset.get(key)) {
                     BackMove backMove = search.play(move);
-                    Pair<Move, Integer> current = maxValue(!turn, depth - 1, alpha, beta);
+                    Pair<Move, Double> current = maxValue(!turn, depth - 1, alpha, beta);
                     if (current.getValue() < best.getValue()) {
                         best = current;
                     }
@@ -177,19 +177,18 @@ public class Computer extends Player {
         return best;
     }
 
-    private Pair<Move, Integer> maxValue(boolean turn, int depth, int alpha, int beta) throws CloneNotSupportedException, FromPieceNullException {
-        Pair<Move, Integer> best;
-        PointsInterface pointsInterface = findPointInterface();
-        int point = pointsInterface.calculatePoints(game);
+    private Pair<Move, Double> maxValue(boolean turn, int depth, double alpha, double beta) throws CloneNotSupportedException, FromPieceNullException {
+        Pair<Move, Double> best;
+        double point = pointsInterface.calculatePoints(game);
         if (depth == 0 || point > 900 || point < -900) {
             return new Pair<>(null, point);
         } else {
-            best = new Pair<>(null, Integer.MIN_VALUE);
+            best = new Pair<>(null, Double.MIN_VALUE);
             LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
             for (String key : subset.keySet()) {
                 for (Move move : subset.get(key)) {
                     BackMove backMove = search.play(move);
-                    Pair<Move, Integer> current = minValue(!turn, depth - 1, alpha, beta);
+                    Pair<Move, Double> current = minValue(!turn, depth - 1, alpha, beta);
                     if (current.getValue() > best.getValue()) {
                         best = current;
                     }

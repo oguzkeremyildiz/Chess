@@ -1,6 +1,7 @@
 import Chess.*;
 import Chess.Piece.Piece;
 import Chess.Players.Computer;
+import Chess.Players.Interface.*;
 
 import java.io.FileNotFoundException;
 
@@ -14,7 +15,7 @@ public class Main {
         Game game = new Game();
         game.setBoard();
         Search search = new Search(game);
-        Computer computer = new Computer(game, search);
+        Computer computer = new Computer(game, search, new NormalCalculate());
         PrintBoard printBoard = new UI(game, search, true);
         boolean turn = true;
         while (game.finished()) {
@@ -32,7 +33,7 @@ public class Main {
                 }
                 Piece to = game.getPiece(bestMove.getToCoordinates().getX(), bestMove.getToCoordinates().getY());
                 if (UIFrame.model == null) {
-                    System.out.println(game.getPiece(bestMove.getFromCoordinates().getX(), bestMove.getFromCoordinates().getY()).getName().toString() + bestMove.toString());
+                    System.out.println(game.getPiece(bestMove.getFromCoordinates().getX(), bestMove.getFromCoordinates().getY()).getName().toString() + bestMove);
                 }
                 if (UIFrame.model != null) {
                     if (to == null) {

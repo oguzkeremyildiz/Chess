@@ -5,6 +5,6 @@ import Chess.Game;
 import java.util.HashMap;
 
 public interface PointsInterface {
-    int calculatePoints(Game game);
+    double calculatePoints(Game game);
     HashMap<String, Integer> setMap();
 }
