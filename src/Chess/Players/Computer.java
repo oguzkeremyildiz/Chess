@@ -125,7 +125,7 @@ public class Computer extends Player {
         MAX_DEPTH = setMaxDepth();
         LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
         Move best = null;
-        double bestValue = Double.MIN_VALUE;
+        double bestValue = Integer.MIN_VALUE;
         for (String key : subset.keySet()) {
             for (Move move : subset.get(key)) {
                 BackMove backMove = search.play(move);
@@ -157,7 +157,7 @@ public class Computer extends Player {
         if (depth == 0 || point > 900 || point < -900) {
             return new Pair<>(null, point);
         } else {
-            best = new Pair<>(null, Double.MAX_VALUE);
+            best = new Pair<>(null, (double) Integer.MAX_VALUE);
             LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
             for (String key : subset.keySet()) {
                 for (Move move : subset.get(key)) {
@@ -183,7 +183,7 @@ public class Computer extends Player {
         if (depth == 0 || point > 900 || point < -900) {
             return new Pair<>(null, point);
         } else {
-            best = new Pair<>(null, Double.MIN_VALUE);
+            best = new Pair<>(null, (double) Integer.MIN_VALUE);
             LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
             for (String key : subset.keySet()) {
                 for (Move move : subset.get(key)) {
