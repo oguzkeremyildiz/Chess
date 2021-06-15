@@ -53,7 +53,6 @@ public class CoordinateCalculate implements PointsInterface {
             case "Q":
                 return 27;
             case "N":
-                return 4;
             case "K":
                 return 8;
             case "B":
