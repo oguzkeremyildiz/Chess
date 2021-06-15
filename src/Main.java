@@ -15,7 +15,7 @@ public class Main {
         Game game = new Game();
         game.setBoard();
         Search search = new Search(game);
-        Computer computer = new Computer(game, search, new NormalCalculate());
+        Computer computer = new Computer(game, search, Point.COORDINATE);
         PrintBoard printBoard = new UI(game, search, true);
         boolean turn = true;
         while (game.finished()) {

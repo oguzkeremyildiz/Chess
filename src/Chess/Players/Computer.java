@@ -2,7 +2,9 @@ package Chess.Players;/* Created by oguzkeremyildiz on 24.11.2020 */
 
 import Chess.*;
 import Chess.Piece.*;
+import Chess.Players.Interface.CoordinateCalculate;
 import Chess.Players.Interface.NormalCalculate;
+import Chess.Players.Interface.Point;
 import Chess.Players.Interface.PointsInterface;
 
 import java.io.File;
@@ -19,9 +21,13 @@ public class Computer extends Player {
     private final Search search;
     private final PointsInterface pointsInterface;
 
-    public Computer(Game game, Search search, PointsInterface pointsInterface) throws FileNotFoundException {
+    public Computer(Game game, Search search, Point point) throws FileNotFoundException {
         super(game);
-        this.pointsInterface = pointsInterface;
+        if (point.equals(Point.NORMAL)) {
+            this.pointsInterface = new NormalCalculate();
+        } else {
+            this.pointsInterface = new CoordinateCalculate(search);
+        }
         openings = new HashMap<>();
         stringMap = setStringMap();
         this.search = search;
