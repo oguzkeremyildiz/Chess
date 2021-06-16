@@ -5,13 +5,12 @@ import javax.swing.*;
 public class UI extends PrintBoard {
 
     UIFrame uiFrame;
-    private Search search;
 
-    public UI(Game game, Search search, boolean turn) {
+    public UI(Game game, boolean turn) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                uiFrame = new UIFrame(game, search, turn);
+                uiFrame = new UIFrame(game, turn);
             }
         });
     }

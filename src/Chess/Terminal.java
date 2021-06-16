@@ -11,10 +11,8 @@ public class Terminal extends PrintBoard {
     private Game game;
     private HashMap<Integer, String> reverseStringMap;
     private HashMap<String, Integer> stringMap;
-    private Search search;
 
-    public Terminal(Game game, Search search) {
-        this.search = search;
+    public Terminal(Game game) {
         this.game = game;
         stringMap = setStringMap();
         reverseStringMap = setReverseStringMap();
@@ -70,7 +68,7 @@ public class Terminal extends PrintBoard {
     }
 
     @Override
-    public void humanMove() throws CloneNotSupportedException, FromPieceNullException {
+    public void humanMove() throws CloneNotSupportedException {
         Scanner scanner = new Scanner(System.in);
         System.out.println();
         System.out.println("Select the piece.");
@@ -87,7 +85,7 @@ public class Terminal extends PrintBoard {
         int y = stringMap.get(scanner.next());
         System.out.println("Enter the second position to move.");
         int x = Game.INTEGER_MAP.get(scanner.nextInt());
-        while (!search.search(new Coordinates(first, last)).contains(new Coordinates(x, y))) {
+        while (!Search.search(new Coordinates(first, last), game).contains(new Coordinates(x, y))) {
             System.out.println("Cannot be played to this point!");
             y = stringMap.get(scanner.next());
             x = Game.INTEGER_MAP.get(scanner.nextInt());
@@ -98,22 +96,22 @@ public class Terminal extends PrintBoard {
             String str = scanner.next();
             switch (str) {
                 case "bishop":
-                    search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.B, null));
+                    Search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.B, null), game);
                     break;
                 case "knight":
-                    search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.N, null));
+                    Search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.N, null), game);
                     break;
                 case "queen":
-                    search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.Q, null));
+                    Search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.Q, null), game);
                     break;
                 case "rook":
-                    search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.R, null));
+                    Search.play(new Coordinates(first, last), new Coordinates(x, y), new Piece(true, PieceName.R, null), game);
                     break;
                 default:
                     break;
             }
         } else {
-            search.play(new Coordinates(first, last), new Coordinates(x, y), null);
+            Search.play(new Coordinates(first, last), new Coordinates(x, y), null, game);
         }
         game.addMove(piece.toString() + new Coordinates(first, last).toString() + "-" + new Coordinates(x, y).toString());
     }

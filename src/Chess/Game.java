@@ -18,6 +18,11 @@ public class Game {
         board = new Piece[8][8];
     }
 
+    public Game(Piece[][] board, LinkedList<String> moves) {
+        this.board = board;
+        this.moves = moves;
+    }
+
     public boolean finished() {
         boolean bool1 = false;
         boolean bool2 = false;
@@ -107,6 +112,10 @@ public class Game {
         return moves.size();
     }
 
+    public void clear() {
+        moves.clear();
+    }
+
     public String getMove(int index) {
         return moves.get(index);
     }
@@ -191,5 +200,22 @@ public class Game {
             }
         }
         return true;
+    }
+
+    @Override
+    public Game clone() throws CloneNotSupportedException {
+        Piece[][] board = new Piece[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Piece current = this.getPiece(i, j);
+                if (current != null) {
+                    board[i][j] = this.getPiece(i, j).clone();
+                } else {
+                    board[i][j] = null;
+                }
+            }
+        }
+        LinkedList<String> moveList = new LinkedList<>(moves);
+        return new Game(board, moveList);
     }
 }

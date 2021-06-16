@@ -11,12 +11,11 @@ public class Main {
         return !turn;
     }
 
-    public static void main(String[]args) throws CloneNotSupportedException, FileNotFoundException, InterruptedException, FromPieceNullException {
+    public static void main(String[]args) throws CloneNotSupportedException, FileNotFoundException, InterruptedException {
         Game game = new Game();
         game.setBoard();
-        Search search = new Search(game);
-        Computer computer = new Computer(game, search, Point.COORDINATE);
-        PrintBoard printBoard = new UI(game, search, true);
+        Computer computer = new Computer(game, Point.COORDINATE);
+        PrintBoard printBoard = new UI(game, true);
         boolean turn = true;
         while (game.finished()) {
             Move bestMove;
@@ -43,7 +42,7 @@ public class Main {
                     }
                     printBoard.print(game);
                 }
-                search.play(bestMove.getFromCoordinates(), bestMove.getToCoordinates(), bestMove.getPromoted());
+                Search.play(bestMove.getFromCoordinates(), bestMove.getToCoordinates(), bestMove.getPromoted(), game);
             }
             turn = setTurn(turn);
         }

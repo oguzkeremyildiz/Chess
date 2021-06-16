@@ -18,12 +18,10 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
     private Piece currentPiece;
     private int mouseIndex1;
     private int mouseIndex2;
-    private Search search;
     private int fromIndex1;
     private int fromIndex2;
 
-    public BoardPanel(Game game, Search search,  boolean turn) {
-        this.search = search;
+    public BoardPanel(Game game, boolean turn) {
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
         setLayout(null);
@@ -139,7 +137,7 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         Coordinates from = new Coordinates(fromIndex1, fromIndex2);
         Coordinates to = new Coordinates(index2, index1);
         String oldCoordinates = from.toString();
-        if (search.search(from).contains(to)) {
+        if (Search.search(from, game).contains(to)) {
             if (currentPiece.getName().equals(PieceName.P) && index2 == 0) {
                 String piece = "";
                 while (!set.contains(piece)) {
@@ -151,8 +149,8 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                     case "B":
                     case "Bishop":
                         try {
-                            search.play(from, to, new Piece(true, PieceName.B, null));
-                        } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                            Search.play(from, to, new Piece(true, PieceName.B, null), game);
+                        } catch (CloneNotSupportedException cloneNotSupportedException) {
                             cloneNotSupportedException.printStackTrace();
                         }
                         break;
@@ -161,8 +159,8 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                     case "N":
                     case "n":
                         try {
-                            search.play(from, to, new Piece(true, PieceName.N, null));
-                        } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                            Search.play(from, to, new Piece(true, PieceName.N, null), game);
+                        } catch (CloneNotSupportedException cloneNotSupportedException) {
                             cloneNotSupportedException.printStackTrace();
                         }
                         break;
@@ -171,8 +169,8 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                     case "q":
                     case "Q":
                         try {
-                            search.play(from, to, new Piece(true, PieceName.Q, null));
-                        } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                            Search.play(from, to, new Piece(true, PieceName.Q, null), game);
+                        } catch (CloneNotSupportedException cloneNotSupportedException) {
                             cloneNotSupportedException.printStackTrace();
                         }
                         break;
@@ -181,8 +179,8 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                     case "Rook":
                     case "R":
                         try {
-                            search.play(from, to, new Piece(true, PieceName.R, null));
-                        } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                            Search.play(from, to, new Piece(true, PieceName.R, null), game);
+                        } catch (CloneNotSupportedException cloneNotSupportedException) {
                             cloneNotSupportedException.printStackTrace();
                         }
                         break;
@@ -191,8 +189,8 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                 }
             } else {
                 try {
-                    search.play(from, to, null);
-                } catch (CloneNotSupportedException | FromPieceNullException cloneNotSupportedException) {
+                    Search.play(from, to, null, game);
+                } catch (CloneNotSupportedException cloneNotSupportedException) {
                     cloneNotSupportedException.printStackTrace();
                 }
             }

@@ -10,10 +10,8 @@ import java.util.HashMap;
 public class CoordinateCalculate implements PointsInterface {
 
     private final HashMap<String, Integer> pointMap = setMap();
-    private final Search search;
 
-    public CoordinateCalculate(Search search) {
-        this.search = search;
+    public CoordinateCalculate() {
     }
 
     private String pieceNameToString(Piece piece) {
@@ -31,7 +29,7 @@ public class CoordinateCalculate implements PointsInterface {
             for (int j = 0; j < 8; j++) {
                 Piece piece = game.getPiece(i, j);
                 if (piece != null) {
-                    int subsets = search.search(new Coordinates(i, j)).size();
+                    int subsets = Search.search(new Coordinates(i, j), game).size();
                     sum += pointMap.get(pieceNameToString(piece));
                     if (piece.color()) {
                         sum -= ((subsets + 0.0) / possibilities(piece.toString()));

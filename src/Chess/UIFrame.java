@@ -19,10 +19,10 @@ public class UIFrame extends JFrame implements ActionListener {
     private JLabel status = new JLabel();
     private Game game;
 
-    public UIFrame(Game game, Search search, boolean turn) {
+    public UIFrame(Game game, boolean turn) {
         setTitle("Chess");
         this.game = game;
-        screen = new BoardPanel(game, search, turn);
+        screen = new BoardPanel(game, turn);
         JMenuBar menuBar = new JMenuBar();
         JMenu file = new JMenu("File");
         menuBar.add(file);
