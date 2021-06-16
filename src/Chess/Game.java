@@ -103,6 +103,14 @@ public class Game {
         return new Coordinates(str.charAt(0), str.charAt(1));
     }
 
+    public int size() {
+        return moves.size();
+    }
+
+    public String getMove(int index) {
+        return moves.get(index);
+    }
+
     public void setBoard(Scanner source, DefaultListModel<String> model) {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -119,7 +127,15 @@ public class Game {
         }
         while (source.hasNext()) {
             String line = source.nextLine();
+            if (line.equals("")) {
+                break;
+            }
             model.addElement(line);
+        }
+        moves.clear();
+        while (source.hasNext()) {
+            String line = source.nextLine();
+            moves.add(line);
         }
     }
 

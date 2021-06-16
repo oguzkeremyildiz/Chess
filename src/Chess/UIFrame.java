@@ -93,6 +93,10 @@ public class UIFrame extends JFrame implements ActionListener {
             for (int i = 0; i < model.size(); i++) {
                 out.println(model.get(i));
             }
+            out.println();
+            for (int i = 0; i < game.size(); i++) {
+                out.println(game.getMove(i));
+            }
             out.close();
             status.setText(file.getName() + " Saved ");
         } catch (IOException e) {
