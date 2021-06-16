@@ -256,12 +256,9 @@ public class Computer extends Player {
     public Move findMove() throws CloneNotSupportedException {
         Pair<Boolean, String[]> pair = isOpeningsContainBoardOrder();
         if (pair.getKey()) {
-            game.addMove(game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(pair.getValue()[0].charAt(1) + "")), stringMap.get(pair.getValue()[0].charAt(0) + "")).toString() + pair.getValue()[0] + "-" + pair.getValue()[1]);
             game.getPiece(Game.INTEGER_MAP.get(Integer.parseInt(pair.getValue()[0].charAt(1) + "")), stringMap.get(pair.getValue()[0].charAt(0) + "")).setOldMove(new Coordinates(Game.INTEGER_MAP.get(Integer.parseInt(pair.getValue()[0].charAt(1) + "")), stringMap.get(pair.getValue()[0].charAt(0) + "")));
             return new Move(new Coordinates(Game.INTEGER_MAP.get(Integer.parseInt(pair.getValue()[0].charAt(1) + "")), stringMap.get(pair.getValue()[0].charAt(0) + "")), new Coordinates(Game.INTEGER_MAP.get(Integer.parseInt(pair.getValue()[1].charAt(1) + "")), stringMap.get(pair.getValue()[1].charAt(0) + "")), null);
         }
-        Move best = miniMaxDecision(false, MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE);
-        game.addMove(game.getPiece(best.getFromCoordinates().getX(), best.getFromCoordinates().getY()).toString() + best.getFromCoordinates().toString() + "-" + best.getToCoordinates().toString());
-        return best;
+        return miniMaxDecision(false, MAX_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 }

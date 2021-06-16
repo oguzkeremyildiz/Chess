@@ -113,7 +113,6 @@ public class Terminal extends PrintBoard {
         } else {
             Search.play(new Coordinates(first, last), new Coordinates(x, y), null, game);
         }
-        game.addMove(piece.toString() + new Coordinates(first, last).toString() + "-" + new Coordinates(x, y).toString());
     }
 
 
