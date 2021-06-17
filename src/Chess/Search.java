@@ -283,6 +283,201 @@ public class Search {
         return possibles;
     }
 
+    private static boolean isItThreatened(boolean color, Coordinates current, Game game) {
+        if (color) {
+            if (game.getPiece(current.getX() - 1, current.getY() - 1) != null && !game.getPiece(current.getX() - 1, current.getY() - 1).color() && game.getPiece(current.getX() - 1, current.getY() - 1).getName().equals(PieceName.P)) {
+                return true;
+            }
+            if (game.getPiece(current.getX() - 1, current.getY() + 1) != null && !game.getPiece(current.getX() - 1, current.getY() + 1).color() && game.getPiece(current.getX() - 1, current.getY() + 1).getName().equals(PieceName.P)) {
+                return true;
+            }
+        } else {
+            if (game.getPiece(current.getX() + 1, current.getY() - 1) != null && game.getPiece(current.getX() + 1, current.getY() - 1).color() && game.getPiece(current.getX() + 1, current.getY() - 1).getName().equals(PieceName.P)) {
+                return true;
+            }
+            if (game.getPiece(current.getX() + 1, current.getY() + 1) != null && game.getPiece(current.getX() + 1, current.getY() + 1).color() && game.getPiece(current.getX() + 1, current.getY() + 1).getName().equals(PieceName.P)) {
+                return true;
+            }
+        }
+        if (current.getX() - 2 > -1) {
+            if (current.getY() - 1 > -1) {
+                if (game.getPiece(current.getX() - 2, current.getY() - 1) != null && game.getPiece(current.getX() - 2, current.getY() - 1).getName().equals(PieceName.N)) {
+                    if (game.getPiece(current.getX() - 2, current.getY() - 1).color() != color) {
+                        return true;
+                    }
+                }
+            }
+            if (current.getY() + 1 < 8) {
+                if (game.getPiece(current.getX() - 2, current.getY() + 1) != null && game.getPiece(current.getX() - 2, current.getY() + 1).getName().equals(PieceName.N)) {
+                    if (game.getPiece(current.getX() - 2, current.getY() + 1).color() != color) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (current.getX() + 2 < 8) {
+            if (current.getY() - 1 > -1) {
+                if (game.getPiece(current.getX() + 2, current.getY() - 1) != null && game.getPiece(current.getX() + 2, current.getY() - 1).getName().equals(PieceName.N)) {
+                    if (game.getPiece(current.getX() + 2, current.getY() - 1).color() != color) {
+                        return true;
+                    }
+                }
+            }
+            if (current.getY() + 1 < 8) {
+                if (game.getPiece(current.getX() + 2, current.getY() + 1) != null && game.getPiece(current.getX() + 2, current.getY() + 1).getName().equals(PieceName.N)) {
+                    if (game.getPiece(current.getX() + 2, current.getY() + 1).color() != color) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (current.getY() + 2 < 8) {
+            if (current.getX() + 1 < 8) {
+                if (game.getPiece(current.getX() + 1, current.getY() + 2) != null && game.getPiece(current.getX() + 1, current.getY() + 2).getName().equals(PieceName.N)) {
+                    if (game.getPiece(current.getX() + 1, current.getY() + 2).color() != color) {
+                        return true;
+                    }
+                }
+            }
+            if (current.getX() - 1 > -1) {
+                if (game.getPiece(current.getX() - 1, current.getY() + 2) != null && game.getPiece(current.getX() - 1, current.getY() + 2).getName().equals(PieceName.N)) {
+                    if (game.getPiece(current.getX() - 1, current.getY() + 2).color() != color) {
+                        return true;
+                    }
+                }
+            }
+        }
+        if (current.getY() - 2 > -1) {
+            if (current.getX() + 1 < 8) {
+                if (game.getPiece(current.getX() + 1, current.getY() - 2) != null && game.getPiece(current.getX() + 1, current.getY() - 2).getName().equals(PieceName.N)) {
+                    if (game.getPiece(current.getX() + 1, current.getY() - 2).color() != color) {
+                        return true;
+                    }
+                }
+            }
+            if (current.getX() - 1 > -1) {
+                if (game.getPiece(current.getX() - 1, current.getY() - 2) != null && game.getPiece(current.getX() - 1, current.getY() - 2).getName().equals(PieceName.N)) {
+                    if (game.getPiece(current.getX() - 1, current.getY() - 2).color() != color) {
+                        return true;
+                    }
+                }
+            }
+        }
+        int iterate = 1;
+        while (current.getX() + iterate < 8) {
+            Piece currentPiece = game.getPiece(current.getX() + iterate, current.getY());
+            if (currentPiece != null) {
+                if (currentPiece.color() != color) {
+                    if (currentPiece.getName().equals(PieceName.R) || currentPiece.getName().equals(PieceName.Q)) {
+                        return true;
+                    }
+                } else {
+                    break;
+                }
+            }
+            iterate++;
+        }
+        iterate = 1;
+        while (current.getX() - iterate > -1) {
+            Piece currentPiece = game.getPiece(current.getX() - iterate, current.getY());
+            if (currentPiece != null) {
+                if (currentPiece.color() != color) {
+                    if (currentPiece.getName().equals(PieceName.R) || currentPiece.getName().equals(PieceName.Q)) {
+                        return true;
+                    }
+                } else {
+                    break;
+                }
+            }
+            iterate++;
+        }
+        iterate = 1;
+        while (current.getY() + iterate < 8) {
+            Piece currentPiece = game.getPiece(current.getX(), current.getY() + iterate);
+            if (currentPiece != null) {
+                if (currentPiece.color() != color) {
+                    if (currentPiece.getName().equals(PieceName.R) || currentPiece.getName().equals(PieceName.Q)) {
+                        return true;
+                    }
+                } else {
+                    break;
+                }
+            }
+            iterate++;
+        }
+        iterate = 1;
+        while (current.getY() - iterate > -1) {
+            Piece currentPiece = game.getPiece(current.getX(), current.getY() - iterate);
+            if (currentPiece != null) {
+                if (currentPiece.color() != color) {
+                    if (currentPiece.getName().equals(PieceName.R) || currentPiece.getName().equals(PieceName.Q)) {
+                        return true;
+                    }
+                } else {
+                    break;
+                }
+            }
+            iterate++;
+        }
+        iterate = 1;
+        while (current.getY() - iterate > -1 && current.getX() - iterate > -1) {
+            Piece currentPiece = game.getPiece(current.getX() - iterate, current.getY() - iterate);
+            if (currentPiece != null) {
+                if (currentPiece.color() != color) {
+                    if (currentPiece.getName().equals(PieceName.B) || currentPiece.getName().equals(PieceName.Q)) {
+                        return true;
+                    }
+                } else {
+                    break;
+                }
+            }
+            iterate++;
+        }
+        iterate = 1;
+        while (current.getY() + iterate < 8 && current.getX() - iterate > -1) {
+            Piece currentPiece = game.getPiece(current.getX() - iterate, current.getY() + iterate);
+            if (currentPiece != null) {
+                if (currentPiece.color() != color) {
+                    if (currentPiece.getName().equals(PieceName.B) || currentPiece.getName().equals(PieceName.Q)) {
+                        return true;
+                    }
+                } else {
+                    break;
+                }
+            }
+            iterate++;
+        }
+        iterate = 1;
+        while (current.getY() + iterate < 8 && current.getX() + iterate < 8) {
+            Piece currentPiece = game.getPiece(current.getX() + iterate, current.getY() + iterate);
+            if (currentPiece != null) {
+                if (currentPiece.color() != color) {
+                    if (currentPiece.getName().equals(PieceName.B) || currentPiece.getName().equals(PieceName.Q)) {
+                        return true;
+                    }
+                } else {
+                    break;
+                }
+            }
+            iterate++;
+        }
+        iterate = 1;
+        while (current.getY() - iterate > -1 && current.getX() + iterate < 8) {
+            Piece currentPiece = game.getPiece(current.getX() + iterate, current.getY() - iterate);
+            if (currentPiece != null) {
+                if (currentPiece.color() != color) {
+                    if (currentPiece.getName().equals(PieceName.B) || currentPiece.getName().equals(PieceName.Q)) {
+                        return true;
+                    }
+                } else {
+                    break;
+                }
+            }
+            iterate++;
+        }
+        return false;
+    }
+
     private static HashSet<Coordinates> searchForKing(Coordinates current, Piece piece, Game game) {
         HashSet<Coordinates> possibles = new HashSet<>();
         if (current.getX() + 1 < 8) {
@@ -316,19 +511,27 @@ public class Search {
         if (piece.color() && piece.getOldMove() == null) {
             if (current.getX() == 7) {
                 if (current.getY() == 4 && game.getPiece(7, 7) != null && game.getPiece(7, 7).getOldMove() == null && game.getPiece(7, 7).color() && game.getPiece(7, 7).getName().equals(PieceName.R) && game.getPiece(7, 5) == null && game.getPiece(7, 6) == null) {
-                    possibles.add(new Coordinates(7, 6));
+                    if (!isItThreatened(piece.color(), new Coordinates(7, 4), game) && !isItThreatened(piece.color(), new Coordinates(7, 5), game) && !isItThreatened(piece.color(), new Coordinates(7, 6), game)) {
+                        possibles.add(new Coordinates(7, 6));
+                    }
                 }
                 if (current.getY() == 4 && game.getPiece(7, 0) != null && game.getPiece(7, 0).getOldMove() == null && game.getPiece(7, 0).color() && game.getPiece(7, 0).getName().equals(PieceName.R) && game.getPiece(7, 1) == null && game.getPiece(7, 2) == null && game.getPiece(7, 3) == null) {
-                    possibles.add(new Coordinates(7, 2));
+                    if (!isItThreatened(piece.color(), new Coordinates(7, 2), game) && !isItThreatened(piece.color(), new Coordinates(7, 3), game) && !isItThreatened(piece.color(), new Coordinates(7, 4), game)) {
+                        possibles.add(new Coordinates(7, 2));
+                    }
                 }
             }
         } else if (piece.getOldMove() == null) {
             if (current.getX() == 0) {
                 if (current.getY() == 4 && game.getPiece(0, 7) != null && game.getPiece(0, 7).getOldMove() == null && !game.getPiece(0, 7).color() && game.getPiece(0, 7).getName().equals(PieceName.R) && game.getPiece(0, 5) == null && game.getPiece(0, 6) == null) {
-                    possibles.add(new Coordinates(0, 6));
+                    if (!isItThreatened(piece.color(), new Coordinates(0, 4), game) && !isItThreatened(piece.color(), new Coordinates(0, 5), game) && !isItThreatened(piece.color(), new Coordinates(0, 6), game)) {
+                        possibles.add(new Coordinates(0, 6));
+                    }
                 }
                 if (current.getY() == 4 && game.getPiece(0, 0) != null && game.getPiece(0, 0).getOldMove() == null && !game.getPiece(0, 0).color() && game.getPiece(0, 0).getName().equals(PieceName.R) && game.getPiece(0, 1) == null && game.getPiece(0, 2) == null && game.getPiece(0, 3) == null) {
-                    possibles.add(new Coordinates(0, 2));
+                    if (!isItThreatened(piece.color(), new Coordinates(0, 2), game) && !isItThreatened(piece.color(), new Coordinates(0, 3), game) && !isItThreatened(piece.color(), new Coordinates(0, 4), game)) {
+                        possibles.add(new Coordinates(0, 2));
+                    }
                 }
             }
         }
