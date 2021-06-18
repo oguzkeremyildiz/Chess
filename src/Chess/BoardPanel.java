@@ -194,7 +194,8 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
                     cloneNotSupportedException.printStackTrace();
                 }
             }
-            UIFrame.model.addElement(currentPiece.getName() + ": played from " + oldCoordinates + " to " + to);
+            int size = UIFrame.model.size();
+            UIFrame.model.addElement(size / 2 + 1 + "-) " + currentPiece.getName() + ": played from " + oldCoordinates + " to " + to);
             turn = false;
         }
         currentPiece = null;
