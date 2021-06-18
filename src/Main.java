@@ -17,11 +17,15 @@ public class Main {
         Computer computer = new Computer(game, Point.COORDINATE);
         PrintBoard printBoard = new UI(game, true);
         boolean turn = true;
+        int iterate = 0;
         while (game.finished()) {
             Move bestMove;
             if (turn) {
+                iterate++;
+                System.out.println(iterate);
                 printBoard.print(game);
                 printBoard.humanMove();
+                UIFrame.model.setElementAt(iterate + "-) " + UIFrame.model.lastElement(), UIFrame.model.size() - 1);
             } else {
                 bestMove = computer.findMove();
                 String oldCoordinates = bestMove.getFromCoordinates().toString();
@@ -36,9 +40,9 @@ public class Main {
                 }
                 if (UIFrame.model != null) {
                     if (to == null) {
-                        UIFrame.model.addElement(game.getPiece(bestMove.getFromCoordinates().getX(), bestMove.getFromCoordinates().getY()).getName().toString().toLowerCase() + ": played from " + oldCoordinates + " to " + bestMove.getToCoordinates());
+                        UIFrame.model.addElement(iterate + "-) " + game.getPiece(bestMove.getFromCoordinates().getX(), bestMove.getFromCoordinates().getY()).getName().toString().toLowerCase() + ": played from " + oldCoordinates + " to " + bestMove.getToCoordinates());
                     } else if (toName != null) {
-                        UIFrame.model.addElement(fromName + ": played from " + oldCoordinates + " to " + bestMove.getToCoordinates() + " (" + toName + " out of the board)");
+                        UIFrame.model.addElement(iterate + "-) " + fromName + ": played from " + oldCoordinates + " to " + bestMove.getToCoordinates() + " (" + toName + " out of the board)");
                     }
                     printBoard.print(game);
                 }
