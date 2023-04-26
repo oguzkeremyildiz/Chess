@@ -187,6 +187,20 @@ public class Game {
     }
 
     @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < board.length; i++) {
+            Piece[] pieces = board[i];
+            for (int j = 0; j < this.board[0].length; j++) {
+                if (pieces[j] != null) {
+                    str.append(i).append(j).append(pieces[j].toString());
+                }
+            }
+        }
+        return str.toString();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Game)) {
             return false;

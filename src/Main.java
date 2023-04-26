@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[]args) throws CloneNotSupportedException, FileNotFoundException, InterruptedException {
         Game game = new Game();
         game.setBoard();
-        Computer computer = new Computer(game, Point.COORDINATE);
+        Computer computer = new Computer(game, Point.NORMAL);
         PrintBoard printBoard = new UI(game, true);
         boolean turn = true;
         while (game.finished()) {

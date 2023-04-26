@@ -17,11 +17,13 @@ import java.util.Scanner;
 public class Computer extends Player {
 
     private HashMap<String[], String[]> openings;
+    private HashSet<Pair<Integer, String>> visited;
     private static int MAX_DEPTH = 5;
     private final PointsInterface pointsInterface;
 
     public Computer(Game game, Point point) throws FileNotFoundException {
         super(game);
+        visited = new HashSet<>();
         if (point.equals(Point.NORMAL)) {
             this.pointsInterface = new NormalCalculate();
         } else {
@@ -166,6 +168,7 @@ public class Computer extends Player {
                 }
             }
         }
+        visited.clear();
         return best;
     }
 
@@ -175,6 +178,10 @@ public class Computer extends Player {
         if (depth == 0 || point > 900 || point < -900) {
             return new Pair<>(null, point);
         } else {
+            if (visited.contains(new Pair<>(depth, game.toString()))) {
+                return new Pair<>(null, (double) Integer.MIN_VALUE);
+            }
+            visited.add(new Pair<>(depth, game.toString()));
             best = new Pair<>(null, (double) Integer.MAX_VALUE);
             LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
             for (String key : subset.keySet()) {
@@ -202,6 +209,10 @@ public class Computer extends Player {
         if (depth == 0 || point > 900 || point < -900) {
             return new Pair<>(null, point);
         } else {
+            if (visited.contains(new Pair<>(depth, game.toString()))) {
+                return new Pair<>(null, (double) Integer.MAX_VALUE);
+            }
+            visited.add(new Pair<>(depth, game.toString()));
             best = new Pair<>(null, (double) Integer.MIN_VALUE);
             LinkedHashMap<String, HashSet<Move>> subset = constructCandidates(turn);
             for (String key : subset.keySet()) {
