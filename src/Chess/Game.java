@@ -193,7 +193,7 @@ public class Game {
             Piece[] pieces = board[i];
             for (int j = 0; j < this.board[0].length; j++) {
                 if (pieces[j] != null) {
-                    str.append(i).append(j).append(pieces[j].toString());
+                    str.append(i).append(j).append(pieces[j].color()).append(pieces[j].toString());
                 }
             }
         }
